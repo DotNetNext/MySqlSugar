@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace SqlSugar
+namespace MySqlSugar
 {
     public interface IClient
     {

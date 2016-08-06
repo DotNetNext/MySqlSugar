@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：实体生成类

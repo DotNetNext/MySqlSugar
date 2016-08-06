@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Data.SqlClient;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
 
     /// ** 描述：SqlSugar扩展工具类

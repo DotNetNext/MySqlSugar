@@ -354,9 +354,9 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SqlSugar\SqlSugar.csproj">
+    <ProjectReference Include="..\SqlSugar\MySqlSugar.csproj">
       <Project>{46A17E67-7E3E-4369-9B1F-43BA34BBDAEF}</Project>
-      <Name>SqlSugar</Name>
+      <Name>MySqlSugar</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

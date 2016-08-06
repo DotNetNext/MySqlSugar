@@ -1,0 +1,4 @@
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\SqlSugar.dll
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\SqlSugar.pdb
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\SqlSugar.dll
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\SqlSugar.pdb

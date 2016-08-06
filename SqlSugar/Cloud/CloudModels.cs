@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace SqlSugar
         public object WhereObj { get; set; }
         public string SymbolReverse { get; set; }
         public int ConfigCount { get; set; }
-        public SqlSugar.OrderByType OrderByTypeReverse { get; set; }
+        public OrderByType OrderByTypeReverse { get; set; }
     }
 
     internal class PageRowInnerParamsResultMultipleOrderBy

@@ -1,0 +1,4 @@
+G:\OneDrive\Asp.net\Project\SqlSugar\T4Test.Entities\bin\Release\T4Test.Entities.dll
+G:\OneDrive\Asp.net\Project\SqlSugar\T4Test.Entities\bin\Release\T4Test.Entities.pdb
+G:\OneDrive\Asp.net\Project\SqlSugar\T4Test.Entities\obj\Release\T4Test.Entities.dll
+G:\OneDrive\Asp.net\Project\SqlSugar\T4Test.Entities\obj\Release\T4Test.Entities.pdb
