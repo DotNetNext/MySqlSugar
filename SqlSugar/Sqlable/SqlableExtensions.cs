@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace MySqlSugar
 {
@@ -174,9 +174,9 @@ namespace MySqlSugar
         /// <param name="sqlable"></param>
         /// <param name="whereObj"></param>
         /// <returns></returns>
-        private static SqlParameter[] GetAllParas(Sqlable sqlable, object whereObj)
+        private static MySqlParameter[] GetAllParas(Sqlable sqlable, object whereObj)
         {
-            List<SqlParameter> allParams = new List<SqlParameter>();
+            List<MySqlParameter> allParams = new List<MySqlParameter>();
             var selectParas = SqlSugarTool.GetParameters(whereObj).ToList();
             if (selectParas.IsValuable())
             {

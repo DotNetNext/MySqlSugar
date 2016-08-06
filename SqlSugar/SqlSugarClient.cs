@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Reflection;
 using System.Data;
 using System.Linq.Expressions;
@@ -94,7 +94,7 @@ namespace MySqlSugar
         /// <summary>
         /// 设置分页类型
         /// </summary>
-        public PageModel PageModel = PageModel.RowNumber;
+        public PageModel PageModel = PageModel.Default;
         /// <summary>
         /// 设置多语言配置
         /// </summary>
@@ -228,7 +228,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public List<T> SqlQuery<T>(string sql, SqlParameter[] pars)
+        public List<T> SqlQuery<T>(string sql, MySqlParameter[] pars)
         {
             return SqlQuery<T>(sql, pars.ToList());
         }
@@ -240,9 +240,9 @@ namespace MySqlSugar
         /// <param name="reader"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public List<T> SqlQuery<T>(string sql, List<SqlParameter> pars)
+        public List<T> SqlQuery<T>(string sql, List<MySqlParameter> pars)
         {
-            SqlDataReader reader = null;
+            MySqlDataReader reader = null;
             //全局过滤器
             if (CurrentFilterKey.IsValuable())
             {
@@ -306,7 +306,7 @@ namespace MySqlSugar
             typeName = GetTableNameByClassType(typeName);
 
             StringBuilder sbInsertSql = new StringBuilder();
-            List<SqlParameter> pars = new List<SqlParameter>();
+            List<MySqlParameter> pars = new List<MySqlParameter>();
             var identities = SqlSugarTool.GetIdentitiesKeyByTableName(this, typeName);
             isIdentity = identities != null && identities.Count > 0;
             //sql语句缓存
@@ -384,11 +384,7 @@ namespace MySqlSugar
                       val=(int)(val);
                     }
 
-                    var par = new SqlParameter("@" + prop.Name, val);
-                    if (par.SqlDbType == SqlDbType.Udt)
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
-                    }
+                    var par = new MySqlParameter("@" + prop.Name, val);
                     pars.Add(par);
                 }
             }
@@ -459,17 +455,13 @@ namespace MySqlSugar
             re.ResolveExpression(re, expression);
             sbSql.Append(re.SqlWhere); ;
 
-            List<SqlParameter> parsList = new List<SqlParameter>();
+            List<MySqlParameter> parsList = new List<MySqlParameter>();
             parsList.AddRange(re.Paras);
             var pars = rows;
             if (pars != null)
             {
                 foreach (var par in pars)
                 {
-                    if (par.SqlDbType == SqlDbType.Udt)
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
-                    }
                     parsList.Add(par);
                 }
             }
@@ -532,17 +524,13 @@ namespace MySqlSugar
             {
                 sbSql.AppendFormat("WHERE {1} IN ({2})", typeName, pkName, whereIn.ToJoinSqlInVal());
             }
-            List<SqlParameter> parsList = new List<SqlParameter>();
-            var pars = rows.Select(c => new SqlParameter("@" + c.Key, c.Value));
+            List<MySqlParameter> parsList = new List<MySqlParameter>();
+            var pars = rows.Select(c => new MySqlParameter("@" + c.Key, c.Value));
             if (pars != null)
             {
                 foreach (var par in pars)
                 {
                     var isDisableUpdateColumns = DisableUpdateColumns != null && DisableUpdateColumns.Any(it => it.ToLower() == par.ParameterName.TrimStart('@').ToLower());
-                    if (par.SqlDbType == SqlDbType.Udt || par.ParameterName.ToLower().Contains("hierarchyid"))
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
-                    }
                     if (!isDisableUpdateColumns)
                     {
                         parsList.Add(par);

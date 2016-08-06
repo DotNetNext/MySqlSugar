@@ -45,6 +45,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=6.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SqlSugar\lib\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
@@ -74,7 +78,6 @@
     <Content Include="App_Lib\SyntacticSugar.XML" />
     <Content Include="BuilderClass.aspx" />
     <Content Include="Demos\Ado.aspx" />
-    <Content Include="Demos\Cloud.aspx" />
     <Content Include="Demos\CreateModelFile.aspx" />
     <Content Include="Demos\Delete.aspx" />
     <Content Include="Demos\EnumType.aspx" />
@@ -87,7 +90,6 @@
     <Content Include="Demos\Select.aspx" />
     <Content Include="Demos\SerializerDateFormat.aspx" />
     <Content Include="Demos\SerialNumber.aspx" />
-    <Content Include="Demos\SqlPageModel.aspx" />
     <Content Include="Demos\Tran.aspx" />
     <Content Include="Demos\Update.aspx" />
     <Content Include="PerformanceTest\add_delete_update\Add.aspx" />
@@ -131,13 +133,6 @@
     </Compile>
     <Compile Include="Demos\Ado.aspx.designer.cs">
       <DependentUpon>Ado.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Demos\Cloud.aspx.cs">
-      <DependentUpon>Cloud.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Demos\Cloud.aspx.designer.cs">
-      <DependentUpon>Cloud.aspx</DependentUpon>
     </Compile>
     <Compile Include="Demos\CreateModelFile.aspx.cs">
       <DependentUpon>CreateModelFile.aspx</DependentUpon>
@@ -222,13 +217,6 @@
     </Compile>
     <Compile Include="Demos\SerialNumber.aspx.designer.cs">
       <DependentUpon>SerialNumber.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Demos\SqlPageModel.aspx.cs">
-      <DependentUpon>SqlPageModel.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Demos\SqlPageModel.aspx.designer.cs">
-      <DependentUpon>SqlPageModel.aspx</DependentUpon>
     </Compile>
     <Compile Include="Demos\Tran.aspx.cs">
       <DependentUpon>Tran.aspx</DependentUpon>

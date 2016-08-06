@@ -5,9 +5,10 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SyntacticSugar;
-using SqlSugar;
+using MySqlSugar;
 using Dapper;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace WebTest.Select
 {
@@ -25,7 +26,7 @@ namespace WebTest.Select
                 pt.Execute(i =>
                 {
                     db.GetDataTable(@"select * from (select  s.*,row_number() over (order by s.id asc,s.name desc) r from dbo.Student s inner join dbo.School sc on sc.id=s.sch_id 
-left join dbo.Subject sb on sb.sid=s.id where  s.id>@id1 and  s.id>@id2) t where  t.r between @b and @e", new SqlParameter("@id1", "1"), new SqlParameter("@id2", "2"), new SqlParameter("@b", "11"), new SqlParameter("@e", "20"));
+left join dbo.Subject sb on sb.sid=s.id where  s.id>@id1 and  s.id>@id2) t where  t.r between @b and @e", new MySqlParameter("@id1", "1"), new MySqlParameter("@id2", "2"), new MySqlParameter("@b", "11"), new MySqlParameter("@e", "20"));
 
                 }, m => { }, "ado.DateTable 纯SQL写法");
 

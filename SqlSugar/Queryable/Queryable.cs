@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace MySqlSugar
 {
@@ -51,7 +51,7 @@ namespace MySqlSugar
         /// <summary>
         /// SqlParameter临时数据
         /// </summary>
-        public List<SqlParameter> Params = new List<SqlParameter>();
+        public List<MySqlParameter> Params = new List<MySqlParameter>();
         /// <summary>
         /// 表名
         /// </summary>

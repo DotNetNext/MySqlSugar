@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Reflection;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -210,9 +210,9 @@ namespace MySqlSugar
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static SqlParameter[] GetParameters(object obj)
+        public static MySqlParameter[] GetParameters(object obj)
         {
-            List<SqlParameter> listParams = new List<SqlParameter>();
+            List<MySqlParameter> listParams = new List<MySqlParameter>();
             if (obj != null)
             {
                 var type = obj.GetType();
@@ -227,14 +227,11 @@ namespace MySqlSugar
                     if (value == null) value = DBNull.Value;
                     if (r.Name.ToLower().Contains("hierarchyid"))
                     {
-                        var par = new SqlParameter("@" + r.Name, SqlDbType.Udt);
-                        par.UdtTypeName = "HIERARCHYID";
-                        par.Value = value;
-                        listParams.Add(par);
+                      
                     }
                     else
                     {
-                        listParams.Add(new SqlParameter("@" + r.Name, value));
+                        listParams.Add(new MySqlParameter("@" + r.Name, value));
                     }
                 }
             }
@@ -476,8 +473,7 @@ namespace MySqlSugar
 
         internal static void GetSqlableSql(Sqlable sqlable, string fileds, string orderByFiled, int pageIndex, int pageSize, StringBuilder sbSql)
         {
-            if (sqlable.DB.PageModel == PageModel.RowNumber)
-            {
+             
                 sbSql.Insert(0, string.Format("SELECT {0},row_index=ROW_NUMBER() OVER(ORDER BY {1} )", fileds, orderByFiled));
                 sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
                 sbSql.Append(sqlable.OrderBy);
@@ -486,23 +482,13 @@ namespace MySqlSugar
                 int take = pageSize;
                 sbSql.Insert(0, "SELECT * FROM ( ");
                 sbSql.AppendFormat(") t WHERE  t.row_index BETWEEN {0}  AND {1}   ", skip, skip + take - 1);
-            }
-            else
-            {
-                sbSql.Insert(0, string.Format("SELECT {0}", fileds));
-                sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
-                sbSql.Append(sqlable.GroupBy);
-                sbSql.AppendFormat(" ORDER BY {0} ", orderByFiled);
-                int skip = (pageIndex - 1) * pageSize;
-                int take = pageSize;
-                sbSql.AppendFormat("OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY", skip, take);
-            }
+           
         }
         /// <summary>
         /// 获取参数到键值集合根据页面Request参数
         /// </summary>
         /// <returns></returns>
-        public static SqlParameter[] GetParameterArray(bool isNotNullAndEmpty = false)
+        public static MySqlParameter[] GetParameterArray(bool isNotNullAndEmpty = false)
         {
             Dictionary<string, string> paraDictionaryByGet = HttpContext.Current.Request.QueryString.Keys.Cast<string>()
                    .ToDictionary(k => k, v => HttpContext.Current.Request.QueryString[v]);
@@ -515,7 +501,7 @@ namespace MySqlSugar
             {
                 paraDictionarAll = paraDictionarAll.Where(it => !string.IsNullOrEmpty(it.Value));
             }
-            return paraDictionarAll.Select(it => new SqlParameter("@" + it.Key, it.Value)).ToArray();
+            return paraDictionarAll.Select(it => new MySqlParameter("@" + it.Key, it.Value)).ToArray();
         }
 
         internal static StringBuilder GetQueryableSql<T>(Queryable<T> queryable)
@@ -535,32 +521,7 @@ namespace MySqlSugar
                 if (isLanView)
                     tableName = typeof(T).Name + queryable.DB.Language.Suffix;
             }
-            if (queryable.DB.PageModel == PageModel.RowNumber)
-            {
-                #region  rowNumber
-                string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
-                var order = queryable.OrderBy.IsValuable() ? (",row_index=ROW_NUMBER() OVER(ORDER BY " + queryable.OrderBy + " )") : null;
-
-                sbSql.AppendFormat("SELECT " + queryable.Select.GetSelectFiles() + " {1} FROM {0} {2} WHERE 1=1 {3} {4} ", tableName, order, withNoLock, string.Join("", queryable.Where), queryable.GroupBy.GetGroupBy());
-                if (queryable.Skip == null && queryable.Take != null)
-                {
-                    sbSql.Insert(0, "SELECT " + queryable.Select.GetSelectFiles() + " FROM ( ");
-                    sbSql.Append(") t WHERE t.row_index<=" + queryable.Take);
-                }
-                else if (queryable.Skip != null && queryable.Take == null)
-                {
-                    sbSql.Insert(0, "SELECT " + queryable.Select.GetSelectFiles() + " FROM ( ");
-                    sbSql.Append(") t WHERE t.row_index>" + (queryable.Skip));
-                }
-                else if (queryable.Skip != null && queryable.Take != null)
-                {
-                    sbSql.Insert(0, "SELECT " + queryable.Select.GetSelectFiles() + " FROM ( ");
-                    sbSql.Append(") t WHERE t.row_index BETWEEN " + (queryable.Skip + 1) + " AND " + (queryable.Skip + queryable.Take));
-                }
-                #endregion
-            }
-            else
-            {
+           
 
                 #region offset
                 string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
@@ -569,7 +530,6 @@ namespace MySqlSugar
                 sbSql.Append(order);
                 sbSql.AppendFormat("OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY", queryable.Skip, queryable.Take);
                 #endregion
-            }
             return sbSql;
         }
     }

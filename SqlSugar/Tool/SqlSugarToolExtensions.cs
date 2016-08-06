@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace MySqlSugar
 {
@@ -105,17 +105,17 @@ namespace MySqlSugar
         /// 将Request里的参数转成SqlParameter[]
         /// </summary>
         /// <returns></returns>
-        public static void RequestParasToSqlParameters(SqlParameterCollection  oldParas)
+        public static void RequestParasToSqlParameters(MySqlParameterCollection oldParas)
         {
-            var oldParaList= oldParas.Cast<SqlParameter>().ToList();
+            var oldParaList = oldParas.Cast<MySqlParameter>().ToList();
             var paraDictionarAll =SqlSugarTool.GetParameterDictionary();
             if (paraDictionarAll != null && paraDictionarAll.Count() > 0)
             {
             
                 foreach (KeyValuePair<string, string> it in paraDictionarAll)
                 {
-                 
-                    var par=new SqlParameter("@" + it.Key, it.Value);
+
+                    var par = new MySqlParameter("@" + it.Key, it.Value);
                     if (!oldParaList.Any(oldPara=>oldPara.ParameterName==("@"+it.Key)))
                     {
                         oldParas.Add(par);

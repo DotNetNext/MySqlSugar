@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -24,7 +24,7 @@ namespace MySqlSugar
             this.SameIndex = sameIndex;
         }
         public string SqlWhere = null;
-        public List<SqlParameter> Paras = new List<SqlParameter>();
+        public List<MySqlParameter> Paras = new List<MySqlParameter>();
         private int SameIndex = 1;
 
         public void ResolveExpression(ResolveExpress re, Expression exp)
@@ -280,11 +280,11 @@ namespace MySqlSugar
             SameIndex++;
             if (right == null)
             {
-                this.Paras.Add(new SqlParameter("@" + left, DBNull.Value));
+                this.Paras.Add(new MySqlParameter("@" + left, DBNull.Value));
             }
             else
             {
-                this.Paras.Add(new SqlParameter("@" + left, right));
+                this.Paras.Add(new MySqlParameter("@" + left, right));
             }
             return oldLeft;
         }
@@ -295,11 +295,11 @@ namespace MySqlSugar
             SameIndex++;
             if (left == null)
             {
-                this.Paras.Add(new SqlParameter("@" + right, DBNull.Value));
+                this.Paras.Add(new MySqlParameter("@" + right, DBNull.Value));
             }
             else
             {
-                this.Paras.Add(new SqlParameter("@" + right, left));
+                this.Paras.Add(new MySqlParameter("@" + right, left));
             }
             return oldRight;
         }

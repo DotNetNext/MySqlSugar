@@ -1,4 +1,5 @@
-G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\SqlSugar.dll
-G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\SqlSugar.pdb
-G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\SqlSugar.dll
-G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\SqlSugar.pdb
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.dll
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.pdb
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySql.Data.dll
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.dll
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.pdb

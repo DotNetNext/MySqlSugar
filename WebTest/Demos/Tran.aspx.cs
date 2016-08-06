@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SqlSugar;
+using MySqlSugar;
 using WebTest.Dao;
 using System.Data;
 namespace WebTest.Demo

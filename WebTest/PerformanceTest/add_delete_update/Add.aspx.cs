@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SyntacticSugar;
-using SqlSugar;
+using MySqlSugar;
 using Dapper;
 using System.Data.SqlClient;
 namespace WebTest.add

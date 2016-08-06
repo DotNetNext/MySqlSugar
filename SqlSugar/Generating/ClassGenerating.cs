@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -130,13 +130,13 @@ namespace {1}
         /// <returns></returns>
         public string SqlToClass(SqlSugarClient db, string sql, string className)
         {
-            using (SqlConnection conn = new SqlConnection(db.ConnectionString))
+            using (MySqlConnection conn = new MySqlConnection(db.ConnectionString))
             {
-                SqlCommand command = new SqlCommand();
+                MySqlCommand command = new MySqlCommand();
                 command.Connection = conn;
                 command.CommandText = sql;
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter(command);
+                MySqlDataAdapter sad = new MySqlDataAdapter(command);
                 sad.Fill(dt);
                 var reval = DataTableToClass(dt, className);
                 return reval;

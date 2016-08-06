@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace MySqlSugar
@@ -16,8 +16,8 @@ namespace MySqlSugar
     /// </summary>
     public class SqlHelper : IDisposable
     {
-        SqlConnection _sqlConnection;
-        SqlTransaction _tran = null;
+        MySqlConnection _sqlConnection;
+        MySqlTransaction _tran = null;
         /// <summary>
         /// 是否清空SqlParameters
         /// </summary>
@@ -33,10 +33,10 @@ namespace MySqlSugar
         public bool IsGetPageParas = false;
         public SqlHelper(string connectionString)
         {
-            _sqlConnection = new SqlConnection(connectionString);
+            _sqlConnection = new MySqlConnection(connectionString);
             _sqlConnection.Open();
         }
-        public SqlConnection GetConnection()
+        public MySqlConnection GetConnection()
         {
             return _sqlConnection;
         }
@@ -50,15 +50,7 @@ namespace MySqlSugar
             _tran = _sqlConnection.BeginTransaction(iso);
         }
 
-        public void BeginTran(string transactionName)
-        {
-            _tran = _sqlConnection.BeginTransaction(transactionName);
-        }
-
-        public void BeginTran(IsolationLevel iso, string transactionName)
-        {
-            _tran = _sqlConnection.BeginTransaction(iso, transactionName);
-        }
+   
 
         public void RollbackTran()
         {
@@ -80,7 +72,7 @@ namespace MySqlSugar
         {
             return GetString(sql, SqlSugarTool.GetParameters(pars));
         }
-        public string GetString(string sql, params SqlParameter[] pars)
+        public string GetString(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToString(GetScalar(sql, pars));
         }
@@ -88,7 +80,7 @@ namespace MySqlSugar
         {
             return GetInt(sql, SqlSugarTool.GetParameters(pars));
         }
-        public int GetInt(string sql, params SqlParameter[] pars)
+        public int GetInt(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToInt32(GetScalar(sql, pars));
         }
@@ -96,9 +88,9 @@ namespace MySqlSugar
         {
             return GetScalar(sql, SqlSugarTool.GetParameters(pars));
         }
-        public object GetScalar(string sql, params SqlParameter[] pars)
+        public object GetScalar(string sql, params MySqlParameter[] pars)
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            MySqlCommand sqlCommand = new MySqlCommand(sql, _sqlConnection);
             if (_tran != null)
             {
                 sqlCommand.Transaction = _tran;
@@ -119,9 +111,9 @@ namespace MySqlSugar
         {
             return ExecuteCommand(sql, SqlSugarTool.GetParameters(pars));
         }
-        public int ExecuteCommand(string sql, params SqlParameter[] pars)
+        public int ExecuteCommand(string sql, params MySqlParameter[] pars)
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            MySqlCommand sqlCommand = new MySqlCommand(sql, _sqlConnection);
             sqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
             {
@@ -137,13 +129,13 @@ namespace MySqlSugar
             sqlCommand.Parameters.Clear();
             return count;
         }
-        public SqlDataReader GetReader(string sql, object pars)
+        public MySqlDataReader GetReader(string sql, object pars)
         {
             return GetReader(sql, SqlSugarTool.GetParameters(pars));
         }
-        public SqlDataReader GetReader(string sql, params SqlParameter[] pars)
+        public MySqlDataReader GetReader(string sql, params MySqlParameter[] pars)
         {
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            MySqlCommand sqlCommand = new MySqlCommand(sql, _sqlConnection);
             sqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
             {
@@ -155,7 +147,7 @@ namespace MySqlSugar
             {
                 SqlSugarToolExtensions.RequestParasToSqlParameters(sqlCommand.Parameters);
             }
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            MySqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             if (isClearParameters)
                 sqlCommand.Parameters.Clear();
             return sqlDataReader;
@@ -164,7 +156,7 @@ namespace MySqlSugar
         {
             return GetList<T>(sql, SqlSugarTool.GetParameters(pars));
         }
-        public List<T> GetList<T>(string sql, params SqlParameter[] pars)
+        public List<T> GetList<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null);
             return reval;
@@ -173,7 +165,7 @@ namespace MySqlSugar
         {
             return GetSingle<T>(sql, SqlSugarTool.GetParameters(pars));
         }
-        public T GetSingle<T>(string sql, params SqlParameter[] pars)
+        public T GetSingle<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null).Single();
             return reval;
@@ -182,9 +174,9 @@ namespace MySqlSugar
         {
             return GetDataTable(sql, SqlSugarTool.GetParameters(pars));
         }
-        public DataTable GetDataTable(string sql, params SqlParameter[] pars)
+        public DataTable GetDataTable(string sql, params MySqlParameter[] pars)
         {
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _sqlConnection);
+            MySqlDataAdapter _sqlDataAdapter = new MySqlDataAdapter(sql, _sqlConnection);
             _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
@@ -204,9 +196,9 @@ namespace MySqlSugar
         {
             return GetDataSetAll(sql, SqlSugarTool.GetParameters(pars));
         }
-        public DataSet GetDataSetAll(string sql, params SqlParameter[] pars)
+        public DataSet GetDataSetAll(string sql, params MySqlParameter[] pars)
         {
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _sqlConnection);
+            MySqlDataAdapter _sqlDataAdapter = new MySqlDataAdapter(sql, _sqlConnection);
             if (_tran != null)
             {
                 _sqlDataAdapter.SelectCommand.Transaction = _tran;

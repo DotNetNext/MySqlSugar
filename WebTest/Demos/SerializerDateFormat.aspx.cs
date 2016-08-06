@@ -4,10 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using SqlSugar;
+using MySqlSugar;
 using WebTest.TestLib;
 using WebTest.Dao;
-using SqlSugar;
+using MySqlSugar;
 namespace WebTest.Demos
 {
     /// <summary>

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using SyntacticSugar;
-using SqlSugar;
+using MySqlSugar;
 using Dapper;
 namespace WebTest.Select
 {
