@@ -352,7 +352,7 @@ namespace MySqlSugar
                     if (!isIdentity || identities.Any(it => it.Value.ToLower() != prop.Name.ToLower()))
                     {
                         //4.将属性的名字加入到字符串中 
-                        sbInsertSql.Append("[" + prop.Name + "],");
+                        sbInsertSql.Append("`" + prop.Name + "`,");
                     }
                 }
                 //**去掉最后一个逗号 
