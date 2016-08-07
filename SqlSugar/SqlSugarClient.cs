@@ -258,7 +258,7 @@ namespace MySqlSugar
                 }
             }
             var type = typeof(T);
-            sql = string.Format(@"--{0}
+            sql = string.Format(@"/*{0}*/
 {1}", type.Name, sql);
             reader = GetReader(sql, pars.ToArray());
             string fields = sql;

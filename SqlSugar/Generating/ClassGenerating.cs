@@ -151,9 +151,9 @@ namespace {1}
         /// <returns></returns>
         public string TableNameToClass(SqlSugarClient db, string tableName)
         {
-            var dt = db.GetDataTable(string.Format("select top 1 * from {0}", tableName));
-            var tableColumns = GetTableColumns(db, tableName);
-            var reval = DataTableToClass(dt, tableName,null,tableColumns);
+            var dt = db.GetDataTable(string.Format("select   * from {0} where 1<0", tableName));
+         
+            var reval = DataTableToClass(dt, tableName,null,null);
             return reval;
         }
 
@@ -168,29 +168,17 @@ namespace {1}
         /// <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
         public void CreateClassFiles(SqlSugarClient db, string fileDirectory, string nameSpace = null, bool? tableOrView = null, Action<string> callBack = null)
         {
-            var tables = db.GetDataTable("select name from sysobjects where xtype in ('U','V') ");
-            if (tableOrView != null)
-            {
-                if (tableOrView == true)
-                {
-                    tables = db.GetDataTable("select name from sysobjects where xtype in ('U') ");
-                }
-                else
-                {
-
-                    tables = db.GetDataTable("select name from sysobjects where xtype in ('V') ");
-                }
-            }
+            var tables = db.GetDataTable("show tables ");
             if (tables != null && tables.Rows.Count > 0)
             {
                 foreach (DataRow dr in tables.Rows)
                 {
-                    string tableName = dr["name"].ToString();
-                    var currentTable = db.GetDataTable(string.Format("select top 1 * from {0}", tableName));
+                    string tableName = dr[0].ToString();
+                    var currentTable = db.GetDataTable(string.Format("select  * from {0} limit 0,1", tableName));
                     if (callBack != null)
                     {
-                        var tableColumns = GetTableColumns(db, tableName);
-                        var classCode = DataTableToClass(currentTable, tableName, nameSpace, tableColumns);
+                      
+                        var classCode = DataTableToClass(currentTable, tableName, nameSpace, null);
                         string className = db.GetClassTypeByTableName(tableName);
                         classCode = classCode.Replace("class " + tableName, "class " + className);
                         FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + className + ".cs", classCode,Encoding.UTF8);
@@ -198,8 +186,8 @@ namespace {1}
                     }
                     else
                     {
-                        var tableColumns = GetTableColumns(db, tableName);
-                        var classCode = DataTableToClass(currentTable, tableName, nameSpace,tableColumns);
+                    
+                        var classCode = DataTableToClass(currentTable, tableName, nameSpace,null);
                         FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + tableName + ".cs", classCode,Encoding.UTF8);
                     }
                 }
