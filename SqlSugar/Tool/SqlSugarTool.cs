@@ -106,9 +106,10 @@ namespace MySqlSugar
                     }
                     catch (Exception innerEx)
                     {
-                        throw new Exception("可能实体与数据库类型不匹配，请用 var str = db.ClassGenerating.TableNameToClass(db, \"类名\") 查看正确的实体！！\r\n具体错误信息:"+innerEx.Message);
+                        throw new Exception("可能实体与数据库类型不匹配，请用 var str = db.ClassGenerating.TableNameToClass(db, \"类名\") 查看正确的实体！！\r\n具体错误信息:" + innerEx.Message);
                     }
-                    finally {
+                    finally
+                    {
                         if (isClose) { dr.Close(); dr.Dispose(); dr = null; }
                     }
 
@@ -221,13 +222,14 @@ namespace MySqlSugar
                 foreach (PropertyInfo r in propertiesObj)
                 {
                     var value = r.GetValue(obj, null);
-                    if (r.PropertyType.IsEnum) {
+                    if (r.PropertyType.IsEnum)
+                    {
                         value = (int)value;
                     }
                     if (value == null) value = DBNull.Value;
                     if (r.Name.ToLower().Contains("hierarchyid"))
                     {
-                      
+
                     }
                     else
                     {
@@ -254,7 +256,8 @@ namespace MySqlSugar
             foreach (PropertyInfo r in propertiesObj)
             {
                 var val = r.GetValue(obj, null);
-                if (r.PropertyType.IsEnum) {
+                if (r.PropertyType.IsEnum)
+                {
                     val = (int)val;
                 }
                 reval.Add(r.Name, val == null ? DBNull.Value : val);
@@ -473,16 +476,16 @@ namespace MySqlSugar
 
         internal static void GetSqlableSql(Sqlable sqlable, string fileds, string orderByFiled, int pageIndex, int pageSize, StringBuilder sbSql)
         {
-             
-                sbSql.Insert(0, string.Format("SELECT {0},row_index=ROW_NUMBER() OVER(ORDER BY {1} )", fileds, orderByFiled));
-                sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
-                sbSql.Append(sqlable.OrderBy);
-                sbSql.Append(sqlable.GroupBy);
-                int skip = (pageIndex - 1) * pageSize + 1;
-                int take = pageSize;
-                sbSql.Insert(0, "SELECT * FROM ( ");
-                sbSql.AppendFormat(") t WHERE  t.row_index BETWEEN {0}  AND {1}   ", skip, skip + take - 1);
-           
+
+            sbSql.Insert(0, string.Format("SELECT {0},row_index=ROW_NUMBER() OVER(ORDER BY {1} )", fileds, orderByFiled));
+            sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
+            sbSql.Append(sqlable.OrderBy);
+            sbSql.Append(sqlable.GroupBy);
+            int skip = (pageIndex - 1) * pageSize + 1;
+            int take = pageSize;
+            sbSql.Insert(0, "SELECT * FROM ( ");
+            sbSql.AppendFormat(") t WHERE  t.row_index BETWEEN {0}  AND {1}   ", skip, skip + take - 1);
+
         }
         /// <summary>
         /// 获取参数到键值集合根据页面Request参数
@@ -521,15 +524,29 @@ namespace MySqlSugar
                 if (isLanView)
                     tableName = typeof(T).Name + queryable.DB.Language.Suffix;
             }
-           
 
-                #region offset
-                string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
-                var order = queryable.OrderBy.IsValuable() ? ("ORDER BY " + queryable.OrderBy + " ") : null;
-                sbSql.AppendFormat("SELECT " + queryable.Select.GetSelectFiles() + " {1} FROM {0} {2} WHERE 1=1 {3} {4} ", tableName, "", withNoLock, string.Join("", queryable.Where), queryable.GroupBy.GetGroupBy());
-                sbSql.Append(order);
-                sbSql.AppendFormat("OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY", queryable.Skip, queryable.Take);
-                #endregion
+
+            #region offset
+            string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
+            var order = queryable.OrderBy.IsValuable() ? ("ORDER BY " + queryable.OrderBy + " ") : null;
+            sbSql.AppendFormat("SELECT " + queryable.Select.GetSelectFiles() + " {1} FROM {0} {2} WHERE 1=1 {3} {4} ", tableName, "", withNoLock, string.Join("", queryable.Where), queryable.GroupBy.GetGroupBy());
+            sbSql.Append(order);
+            if (queryable.Skip > 0 || queryable.Take > 0)
+            {
+                if (queryable.Skip > 0 && queryable.Take > 0)
+                {
+                    sbSql.AppendFormat("limit {0},{1}", queryable.Skip, queryable.Take);
+                }
+                else if (queryable.Skip > 0)
+                {
+                    sbSql.AppendFormat("limit {0}", queryable.Skip);
+                }
+                else if (queryable.Take > 0)
+                {
+                    sbSql.AppendFormat("limit 0,{0}",  queryable.Take);
+                }
+            }
+            #endregion
             return sbSql;
         }
     }

@@ -157,7 +157,7 @@ namespace WebTest.Demo
                 //---------Queryable<T>,扩展函数查询---------//
 
                 //针对单表或者视图查询
-
+               var dt=  db.GetDataTable("select * from Student");
                 //查询所有
                 var student = db.Queryable<Student>().ToList();
                 var studentDynamic = db.Queryable<Student>().ToDynamic();
@@ -173,10 +173,10 @@ namespace WebTest.Demo
                 var first2 = db.Queryable<Student>().Where(c => c.id == 1).FirstOrDefault();
 
                 //取10-20条
-                var page1 = db.Queryable<Student>().Where(c => c.id > 10).OrderBy("id").Skip(10).Take(20).ToList();
+                var page1 = db.Queryable<Student>().Where(c => c.id > 2).OrderBy("id").Skip(2).Take(3).ToList();
 
                 //上一句的简化写法，同样取10-20条
-                var page2 = db.Queryable<Student>().Where(c => c.id > 10).OrderBy("id").ToPageList(2, 10);
+                var page2 = db.Queryable<Student>().Where(c => c.id > 1).OrderBy("id").ToPageList(2, 3);
 
                 //查询条数
                 var count = db.Queryable<Student>().Where(c => c.id > 10).Count();
@@ -188,7 +188,7 @@ namespace WebTest.Demo
                 var take = db.Queryable<Student>().Where(c => c.id > 10).OrderBy("id").Take(2).ToList();
 
                 // Not like 
-                string conval = "a";
+                string conval = "三";
                 var notLike = db.Queryable<Student>().Where(c => !c.name.Contains(conval.ToString())).ToList();
                 //Like
                 conval = "三";
