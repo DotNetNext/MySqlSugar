@@ -34,7 +34,7 @@ namespace WebTest.Demo
 
                 TestUpdateColumns updObj = new TestUpdateColumns()
                 {
-                    VGUID = Guid.Parse("542b5a27-6984-47c7-a8ee-359e483c8470"),
+                    VGUID = Guid.Parse("6DF396EB-D1C8-48A5-8BE1-D58D685646A7"),
                     Name = "xx",
                     Name2 = "xx2",
                     IdentityField = 0,
