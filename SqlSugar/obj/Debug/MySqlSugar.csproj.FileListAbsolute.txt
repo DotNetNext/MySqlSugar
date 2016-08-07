@@ -3,3 +3,4 @@ G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.pd
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySql.Data.dll
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.dll
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.pdb
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.XML
