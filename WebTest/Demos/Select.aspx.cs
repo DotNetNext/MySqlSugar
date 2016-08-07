@@ -61,13 +61,13 @@ namespace WebTest.Demo
                 //转成json
                 string list4 = db.SqlQueryJson("select * from student");
                 //返回int
-                var list5 = db.SqlQuery<int>("select top 1 id from Student").Single();
+                var list5 = db.SqlQuery<int>("select  id from Student limit 0,1").First();
                 //反回键值
                 Dictionary<string, string> list6 = db.SqlQuery<KeyValuePair<string, string>>("select id,name from Student").ToDictionary(it => it.Key, it => it.Value);
                 //反回List<string[]>
-                var list7 = db.SqlQuery<string[]>("select top 1 id,name from Student").Single();
+                var list7 = db.SqlQuery<string[]>("select  name from Student").First();
                 //存储过程
-                var spResult = db.SqlQuery<School>("exec sp_school @p1,@p2", new { p1=1,p2=2 });
+                //var spResult = db.SqlQuery<School>("exec sp_school @p1,@p2", new { p1=1,p2=2 });
             }
         }
         /// <summary>
@@ -132,10 +132,7 @@ namespace WebTest.Demo
                 {
                     sable = sable.Where("s.id=@id or s.id=100");
                 }
-                if (id > 0)
-                {
-                    sable = sable.Where("l.id in (select top 10 id from school)");//where加子查询
-                }
+          
                 var pars = new { id = id, name = name };
                 int pageCount = sable.Count(pars);
                 var list7 = sable.SelectToPageList<Student>("s.*","l.id desc",1,20, pars);
