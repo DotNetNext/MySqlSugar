@@ -221,7 +221,7 @@ namespace WebTest.Demo
                 var list4 = db.Queryable<Student>().Where(it=>it.id<10).In("id", new List<string> { "1", "2", "3" }).ToList();
 
                 //分组查询
-                var list5= db.Queryable<Student>().Where(c => c.id < 20).GroupBy("sex").Select<Student, SexTotal>("Sex,Count=count(*)").ToList();
+                var list5 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy("sex").Select<Student, SexTotal>("Sex,count(sex) AS count").ToList();
                 //SELECT Sex,Count=count(*)  FROM Student  WHERE 1=1  AND  (id < 20)    GROUP BY Sex --生成结果
 
             }
