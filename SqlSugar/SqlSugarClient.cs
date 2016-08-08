@@ -477,7 +477,7 @@ namespace MySqlSugar
                 
                 var cacheManager = CacheManager<string>.GetInstance();
                 cacheManager.RemoveAll(it => it.Contains("KeyBy"));
-                throw new Exception("sql:" + sql + "\n" + ex.Message);
+                throw new Exception("sql:" + sbSql.ToString() + "\n" + ex.Message);
             }
         }
 
