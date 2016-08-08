@@ -4,142 +4,344 @@
         <name>MySqlSugar</name>
     </assembly>
     <members>
-        <!-- 对于成员“T:MySqlSugar.SqlSugarToolExtensions”忽略有格式错误的 XML 注释 -->
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToJoinSqlInVal``1(``0[])">
+        <member name="T:MySqlSugar.ResolveExpress">
             <summary>
-            数组字串转换成SQL参数格式，例如: 参数 new int{1,2,3} 反回 "'1','2','3'"
-            </summary>
-            <param name="array"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSqlValue(System.String)">
-            <summary>
-            将字符串转换成SQL参数格式，例如: 参数value返回'value'
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSqlFilter(System.String)">
-            <summary>
-            SQL关键字过滤,过滤拉姆达式中的特殊字符，出现特殊字符则引发异常
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSuperSqlFilter(System.String)">
-            <summary>
-             指定数据类型，如果不在指定类当中则引发异常(只允许输入指定字母、数字、下划线、时间、GUID)
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetLockString(System.Boolean)">
-            <summary>
-            获取锁字符串
-            </summary>
-            <param name="isNoLock"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetSelectFiles(System.String)">
-            <summary>
-            获取Select需要的字段
-            </summary>
-            <param name="selectFileds"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetGroupBy(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="groupByFileds"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarToolExtensions.RequestParasToSqlParameters(MySql.Data.MySqlClient.MySqlParameterCollection)">
-            <summary>
-            将Request里的参数转成SqlParameter[]
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:MySqlSugar.ClassGenerating">
-            <summary>
-            ** 描述：实体生成类
-            ** 创始时间：2015-4-17
+            ** 描述：拉姆达解析类
+            ** 创始时间：2015-7-20
             ** 修改时间：-
             ** 作者：sunkaixuan
-            ** qq：610262374 欢迎交流,共同提高 ,命名语法等写的不好的地方欢迎大家的给出宝贵建议
-            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4482152.html
+            ** qq：610262374 
+            ** 使用说明：使用请注名作者
             </summary>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.DynamicToClass(System.Object,System.String)">
+        <member name="M:MySqlSugar.ResolveExpress.CreateSqlElements(System.Linq.Expressions.Expression,MySqlSugar.ResolveExpress.MemberType@,System.Boolean)">
             <summary>
-            根据匿名类获取实体类的字符串
+            递归解析表达式路由计算
             </summary>
-            <param name="entity">匿名对象</param>
-            <param name="className">生成的类名</param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.DataTableToClass(System.Data.DataTable,System.String,System.String,System.Collections.Generic.List{MySqlSugar.PubModel.DataTableMap})">
+        <member name="M:MySqlSugar.ResolveExpress.GetOperator(System.Linq.Expressions.ExpressionType)">
             <summary>
-            根据DataTable获取实体类的字符串
+            根据条件生成对应的sql查询操作符
             </summary>
-            <param name="sql"></param>
-            <param name="className"></param>
+            <param name="expressiontype"></param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.SqlToClass(MySqlSugar.SqlSugarClient,System.String,System.String)">
+        <member name="T:MySqlSugar.IDataRecordExtensions">
             <summary>
-            根据SQL语句获取实体类的字符串
+            DataRecord扩展
             </summary>
-            <param name="db"></param>
-            <param name="sql"></param>
-            <param name="className"></param>
+        </member>
+        <member name="T:MySqlSugar.SqlableExtensions">
+            <summary>
+            ** 描述：Sqlable扩展函数
+            ** 创始时间：2015-7-13
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.From(MySqlSugar.Sqlable,System.Object,System.String)">
+            <summary>
+            Form
+            </summary>
+            <param name="sqlable"></param>
+            <param name="modelObj">表名</param>
+            <param name="shortName">表名简写</param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.TableNameToClass(MySqlSugar.SqlSugarClient,System.String)">
+        <member name="M:MySqlSugar.SqlableExtensions.From``1(MySqlSugar.Sqlable,System.String)">
             <summary>
-            根据表名获取实体类的字符串
+            Form
             </summary>
-            <param name="db"></param>
-            <param name="sql"></param>
-            <param name="className"></param>
+            <param name="sqlable"></param>
+            <param name="modelObj">表名</param>
+            <param name="shortName">表名简写</param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.CreateClassFiles(MySqlSugar.SqlSugarClient,System.String,System.String,System.Nullable{System.Boolean},System.Action{System.String})">
+        <member name="M:MySqlSugar.SqlableExtensions.Join(MySqlSugar.Sqlable,System.Object,System.String,System.String,System.String,MySqlSugar.JoinType)">
             <summary>
-            创建SQL实体文件
+            Join
             </summary>
-            <param name="db"></param>
-            <param name="fileDirectory"></param>
-            <param name="nameSpace">命名空间（默认：null）</param>
-            <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
-        </member>
-        <member name="M:MySqlSugar.ClassGenerating.CreateClassFilesInterface(MySqlSugar.SqlSugarClient,System.Nullable{System.Boolean},System.Action{System.Data.DataTable,System.String,System.String})">
-            <summary>
-            创建SQL实体文件
-            </summary>
-            <param name="db"></param>
-            <param name="fileDirectory"></param>
-            <param name="nameSpace">命名空间（默认：null）</param>
-            <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
-        </member>
-        <member name="M:MySqlSugar.ClassGenerating.CreateClassFilesByTableNames(MySqlSugar.SqlSugarClient,System.String,System.String,System.String[])">
-            <summary>
-             创建SQL实体文件,指定表名
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.ClassGenerating.GetTableNames(MySqlSugar.SqlSugarClient)">
-            <summary>
-            获取所有数据库表名
-            </summary>
-            <param name="db"></param>
+            <param name="sqlable"></param>
+            <param name="leftFiled">join左边连接字段</param>
+            <param name="RightFiled">join右边连接字段</param>
+            <param name="type">join类型</param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.ClassGenerating.ChangeType(System.Type)">
+        <member name="M:MySqlSugar.SqlableExtensions.Join``1(MySqlSugar.Sqlable,System.String,System.String,System.String,MySqlSugar.JoinType)">
             <summary>
-            匹配类型
+            Join
             </summary>
-            <param name="type"></param>
+            <param name="sqlable"></param>
+            <param name="leftFiled">join左边连接字段</param>
+            <param name="RightFiled">join右边连接字段</param>
+            <param name="type">join类型</param>
             <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.Where(MySqlSugar.Sqlable,System.String)">
+            <summary>
+            Where
+            </summary>
+            <param name="sqlable"></param>
+            <param name="where">查询条件、开头无需写 AND或者WHERE</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.OrderBy(MySqlSugar.Sqlable,System.String)">
+            <summary>
+            OrderBy
+            </summary>
+            <param name="sqlable"></param>
+            <param name="orderBy">排序字段，可以多个</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.Apply(MySqlSugar.Sqlable,System.String,System.String,MySqlSugar.ApplyType)">
+            <summary>
+            Apply
+            </summary>
+            <param name="sqlable"></param>
+            <param name="applySql">apply主体内容</param>
+            <param name="shotName">apply简写</param>
+            <param name="type">Apply类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.GroupBy(MySqlSugar.Sqlable,System.String)">
+            <summary>
+            GroupBy
+            </summary>
+            <param name="sqlable"></param>
+            <param name="groupBy">GroupBy字段，可以多个</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToList``1(MySqlSugar.Sqlable,System.String,System.Object,System.String,System.String)">
+            <summary>
+            设置查询列执行查询，并且将结果集转成List《T》
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.GetAllParas(MySqlSugar.Sqlable,System.Object)">
+            <summary>
+            获取页面参数
+            </summary>
+            <param name="sqlable"></param>
+            <param name="whereObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToDataTable(MySqlSugar.Sqlable,System.String,System.Object)">
+            <summary>
+            设置查询列执行查询，并且将结果集转成DataTable
+            </summary>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToJson(MySqlSugar.Sqlable,System.String,System.Object)">
+            <summary>
+            设置查询列执行查询，并且将结果集转成json
+            </summary>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToDynamic(MySqlSugar.Sqlable,System.String,System.Object)">
+            <summary>
+            设置查询列执行查询，并且将结果集转成dynamic
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.ToClass(MySqlSugar.Sqlable,System.String,System.Object)">
+            <summary>
+            生成查询结果对应的实体类字符串
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.Count(MySqlSugar.Sqlable,System.Object,System.String,System.String)">
+            <summary>
+            反回记录数
+            </summary>
+            <param name="sqlable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageList``1(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
+            <summary>
+            设置查询列和分页参数执行查询，并且将结果集转成List《T》
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="orderByFiled">Order By字段，可以多个</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">每页显示数量</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageTable(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
+            <summary>
+            设置查询列和分页参数执行查询，并且将结果集转成DataTable
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="orderByFiled">Order By字段，可以多个</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">每页显示数量</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageJson(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
+            <summary>
+            设置查询列和分页参数执行查询，并且将结果集转成json
+            </summary>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="orderByFiled">Order By字段，可以多个</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">每页显示数量</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageDynamic(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
+            <summary>
+            设置查询列和分页参数执行查询，并且将结果集转成dynamic
+            </summary>
+            <param name="sqlable"></param>
+            <param name="fileds">查询列</param>
+            <param name="orderByFiled">Order By字段，可以多个</param>
+            <param name="pageIndex">页码</param>
+            <param name="pageSize">每页显示数量</param>
+            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+            <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.SqlSugarException">
+            <summary>
+            ** 描述：SqlSugar自定义异常
+            ** 创始时间：2015-7-13
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.CacheManager`1">
+            <summary>
+            ** 描述：缓存操作类
+            ** 创始时间：2015-6-9
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4563462.html
+            </summary>
+            <typeparam name="K">键</typeparam>
+            <typeparam name="V">值</typeparam>
+        </member>
+        <member name="T:MySqlSugar.IHttpStorageObject`1">
+            <summary>
+            ** 描述：http存储对象接口
+            ** 创始时间：2015-5-29
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.ContainsKey(System.String)">
+            <summary>         
+            验证key是否存在       
+            </summary>         
+            <param name="key">key</param>         
+            <returns> /// 	存在<c>true</c> 不存在<c>false</c>.        /// /// </returns>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Get(System.String)">
+            <summary>         
+            根据key获取value  
+            </summary>         
+            <param name="key">key</param>         
+            <returns></returns>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.GetInstance">
+            <summary>         
+            获取实例 （单例模式）       
+            </summary>         
+            <returns></returns>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0)">
+            <summary>         
+            插入缓存(默认20分钟)        
+            </summary>         
+            <param name="key"> key</param>         
+            <param name="value">value</param>          
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32)">
+            <summary>         
+            插入缓存        
+            </summary>         
+            <param name="key"> key</param>         
+            <param name="value">value</param>         
+            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32,System.Web.Caching.CacheItemPriority)">
+            <summary>         
+            插入缓存.         
+            </summary>         
+            <param name="key">key</param>         
+            <param name="value">value</param>         
+            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
+            <param name="priority">缓存项属性</param>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32,System.Web.Caching.CacheDependency,System.Web.Caching.CacheItemPriority)">
+            <summary>         
+            插入缓存.         
+            </summary>         
+            <param name="key">key</param>         
+            <param name="value">value</param>         
+            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
+            <param name="priority">缓存项属性</param>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.Remove(System.String)">
+            <summary>         
+            删除缓存         
+            </summary>         
+            <param name="key">key</param>         
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.RemoveAll">
+            <summary>
+            清除所有缓存
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.RemoveAll(System.Func{System.String,System.Boolean})">
+            <summary>
+            清除所有包含关键字的缓存
+            </summary>
+            <param name="removeKey">关键字</param>
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.GetAllKey">
+            <summary>
+            获取所有缓存key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.CacheManager`1.CreateKey(System.String)">
+             <summary>         
+            创建KEY   
+             </summary>         
+             <param name="key">Key</param>         
+             <returns></returns>         
+        </member>
+        <member name="P:MySqlSugar.CacheManager`1.Item(System.String)">
+             <summary>         
+            根据key获取value     
+             </summary>         
+             <value></value>      
         </member>
         <member name="T:MySqlSugar.SqlSugarClient">
             <summary>
@@ -375,6 +577,212 @@
             设置禁止更新的列
             </summary>
         </member>
+        <member name="T:MySqlSugar.LanguageHelper">
+            <summary>
+            多语言帮助类
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.LanguageHelper.UpdateView(MySqlSugar.PubModel.Language,MySqlSugar.SqlSugarClient)">
+            <summary>
+            创建多语言视图，带有LanguageId=1的所有有视图1替换成languageValue 并且新创视图 名称为 原有视图名+_$_+suffix
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.CloudConnectionConfig">
+            <summary>
+            云计算连接配置
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudConnectionConfig.Rate">
+            <summary>
+            处理机率,值越大机率越高
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudConnectionConfig.ConnectionString">
+            <summary>
+            链接字符串名称
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.CloudSearchResult`1">
+            <summary>
+            云搜索Task反回类
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudSearchResult`1.Entities">
+            <summary>
+            集合
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudSearchResult`1.Value">
+            <summary>
+            单个对象
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudSearchResult`1.DataTable">
+            <summary>
+            DataTable
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudSearchResult`1.ConnectionString">
+            <summary>
+            连接字符串
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.CloudSearchResult`1.Count">
+            <summary>
+            数量
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.Taskable`1">
+            <summary>
+            云计扩展类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:MySqlSugar.Taskable`1.Tasks">
+            <summary>
+            任务
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Taskable`1.Sql">
+            <summary>
+            sql
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Taskable`1.WhereObj">
+            <summary>
+            数据库参数(例如:new{id=1,name="张三"})
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.TaskableWithCount`1">
+            <summary>
+            云计扩展类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:MySqlSugar.TaskableWithCount`1.Tasks">
+            <summary>
+            任务
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.TaskableWithCount`1.Sql">
+            <summary>
+            sql
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.TaskableWithCount`1.WhereObj">
+            <summary>
+            数据库参数(例如:new{id=1,name="张三"})
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.Sqlable">
+            <summary>
+            ** 描述：Queryable是多表查询基类，基于拥有大量查询扩展函数
+            ** 创始时间：2015-7-13
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Sqlable.DB">
+            <summary>
+            数据接口
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Sqlable.Where">
+            <summary>
+            Where临时数据
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Sqlable.Params">
+            <summary>
+            参数
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Sqlable.Sql">
+            <summary>
+            sql临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Sqlable.OrderBy">
+            <summary>
+            OrderBy临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Sqlable.GroupBy">
+            <summary>
+            GroupBy临时数据
+            </summary>
+        </member>
+        <member name="T:MySqlSugar.Queryable`1">
+            <summary>
+            ** 描述：Queryable是单表查询基类，基于拥有大量查询扩展函数
+            ** 创始时间：2015-7-13
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Queryable`1.DB">
+            <summary>
+            数据接口
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Queryable`1.Where">
+            <summary>
+            Where临时数据
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Queryable`1.Params">
+            <summary>
+            SqlParameter临时数据
+            </summary>
+        </member>
+        <member name="F:MySqlSugar.Queryable`1.WhereIndex">
+            <summary>
+            条件索引
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.TName">
+            <summary>
+            T的名称
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.Type">
+            <summary>
+            实体类型
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.Skip">
+            <summary>
+            Skip临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.Take">
+            <summary>
+            Take临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.OrderBy">
+            <summary>
+            Order临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.Select">
+            <summary>
+            Select临时数据
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:MySqlSugar.Queryable`1.GroupBy">
+            <summary>
+            分组查询
+            </summary>
+        </member>
         <member name="T:MySqlSugar.IDataReaderEntityBuilder`1">
             <summary>
             ** 描述：DataReader实体生成
@@ -406,263 +814,43 @@
             <param name="isNullable"></param>
             <returns></returns>
         </member>
-        <member name="T:MySqlSugar.SqlSugarException">
+        <member name="M:MySqlSugar.CloudPubMethod.GetPageIndex(System.Int32,System.Double)">
             <summary>
-            ** 描述：SqlSugar自定义异常
-            ** 创始时间：2015-7-13
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：
+            获取pageIndex
             </summary>
+            <param name="pageIndex"></param>
+            <param name="configCount"></param>
         </member>
-        <member name="T:MySqlSugar.CacheManager`1">
+        <member name="M:MySqlSugar.CloudPubMethod.GetConnection(System.Collections.Generic.List{MySqlSugar.CloudConnectionConfig})">
             <summary>
-            ** 描述：缓存操作类
-            ** 创始时间：2015-6-9
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4563462.html
+            根据rate获取随机Connection
             </summary>
-            <typeparam name="K">键</typeparam>
-            <typeparam name="V">值</typeparam>
+            <param name="configList"></param>
         </member>
-        <member name="T:MySqlSugar.IHttpStorageObject`1">
+        <member name="M:MySqlSugar.CloudPubMethod.TaskFactory``1(System.Func{System.Int32,``0},System.Threading.Tasks.Task{``0}[],System.Int32)">
             <summary>
-            ** 描述：http存储对象接口
-            ** 创始时间：2015-5-29
-            ** 修改时间：-
-            ** 作者：sunkaixuan
+            并行执行任务并且传入索引
             </summary>
+            <param name="method">函数参数i</param>
+            <param name="tasks">task数组</param>
+            <param name="i">索引</param>
         </member>
-        <member name="M:MySqlSugar.CacheManager`1.ContainsKey(System.String)">
-            <summary>         
-            验证key是否存在       
-            </summary>         
-            <param name="key">key</param>         
-            <returns> /// 	存在<c>true</c> 不存在<c>false</c>.        /// /// </returns>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Get(System.String)">
-            <summary>         
-            根据key获取value  
-            </summary>         
-            <param name="key">key</param>         
-            <returns></returns>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.GetInstance">
-            <summary>         
-            获取实例 （单例模式）       
-            </summary>         
-            <returns></returns>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0)">
-            <summary>         
-            插入缓存(默认20分钟)        
-            </summary>         
-            <param name="key"> key</param>         
-            <param name="value">value</param>          
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32)">
-            <summary>         
-            插入缓存        
-            </summary>         
-            <param name="key"> key</param>         
-            <param name="value">value</param>         
-            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32,System.Web.Caching.CacheItemPriority)">
-            <summary>         
-            插入缓存.         
-            </summary>         
-            <param name="key">key</param>         
-            <param name="value">value</param>         
-            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
-            <param name="priority">缓存项属性</param>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Add(System.String,`0,System.Int32,System.Web.Caching.CacheDependency,System.Web.Caching.CacheItemPriority)">
-            <summary>         
-            插入缓存.         
-            </summary>         
-            <param name="key">key</param>         
-            <param name="value">value</param>         
-            <param name="cacheDurationInSeconds">过期时间单位秒</param>         
-            <param name="priority">缓存项属性</param>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.Remove(System.String)">
-            <summary>         
-            删除缓存         
-            </summary>         
-            <param name="key">key</param>         
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.RemoveAll">
+        <member name="M:MySqlSugar.CloudPubMethod.GetIsSmallPageIndex(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            清除所有缓存
+            分页索引是否很小
             </summary>
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.RemoveAll(System.Func{System.String,System.Boolean})">
-            <summary>
-            清除所有包含关键字的缓存
-            </summary>
-            <param name="removeKey">关键字</param>
-        </member>
-        <member name="M:MySqlSugar.CacheManager`1.GetAllKey">
-            <summary>
-            获取所有缓存key
-            </summary>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="configCount"></param>
             <returns></returns>
         </member>
-        <member name="M:MySqlSugar.CacheManager`1.CreateKey(System.String)">
-             <summary>         
-            创建KEY   
-             </summary>         
-             <param name="key">Key</param>         
-             <returns></returns>         
-        </member>
-        <member name="P:MySqlSugar.CacheManager`1.Item(System.String)">
-             <summary>         
-            根据key获取value     
-             </summary>         
-             <value></value>      
-        </member>
-        <member name="T:MySqlSugar.IEnumerableExtensions">
+        <member name="M:MySqlSugar.CloudPubMethod.GetIsSmallPageIndexByReverse(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            IEnumerable扩展函数
+            倒数分页索引是否很小
             </summary>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String,MySqlSugar.OrderByType)">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenBy``1(System.Linq.IOrderedEnumerable{``0},System.String,MySqlSugar.OrderByType)">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow``1(System.Collections.Generic.IEnumerable{``0},System.String,MySqlSugar.OrderByType)">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRow``1(System.Linq.IOrderedEnumerable{``0},System.String,MySqlSugar.OrderByType)">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenBy``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow(System.Collections.Generic.IEnumerable{System.Data.DataRow},System.Collections.Generic.List{MySqlSugar.OrderByDictionary},MySqlSugar.OrderByDictionary)">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRow``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByReverse``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByReverse``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRowReverse``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRowReverse``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
-            <summary>
-            排序
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list"></param>
-            <param name="sortField"></param>
-            <param name="orderByType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IEnumerableExtensions.ConvertField(System.Object)">
-            <summary>
-            解决GUID在SQL和C#中，排序方式不一致
-            </summary>
-            <param name="thisValue"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="configCount"></param>
             <returns></returns>
         </member>
         <member name="T:MySqlSugar.FileSugar">
@@ -995,591 +1183,40 @@
             <param name="strFilePath"></param>
             <param name="strValue"></param>
         </member>
-        <member name="T:MySqlSugar.CloudConnectionConfig">
+        <member name="T:MySqlSugar.PubModel.SerialNumber">
             <summary>
-            云计算连接配置
+            流水号设置实体
             </summary>
         </member>
-        <member name="P:MySqlSugar.CloudConnectionConfig.Rate">
+        <member name="P:MySqlSugar.PubModel.SerialNumber.GetNumFunc">
             <summary>
-            处理机率,值越大机率越高
+            获取流水号函数
             </summary>
         </member>
-        <member name="P:MySqlSugar.CloudConnectionConfig.ConnectionString">
+        <member name="T:MySqlSugar.PubModel.Language">
             <summary>
-            链接字符串名称
+            语言
             </summary>
         </member>
-        <member name="T:MySqlSugar.CloudSearchResult`1">
+        <member name="F:MySqlSugar.PubModel.Language.ReplaceViewStringKey">
             <summary>
-            云搜索Task反回类
+            需要全局替换的字符串Key(用于替换默认语言)
             </summary>
         </member>
-        <member name="P:MySqlSugar.CloudSearchResult`1.Entities">
+        <member name="F:MySqlSugar.PubModel.Language.ReplaceViewStringValue">
             <summary>
-            集合
+            需要全局替换的字符串Value(用于替换默认语言)
             </summary>
         </member>
-        <member name="P:MySqlSugar.CloudSearchResult`1.Value">
+        <member name="P:MySqlSugar.PubModel.Language.Suffix">
             <summary>
-            单个对象
+            数据库里面的语言后缀
             </summary>
         </member>
-        <member name="P:MySqlSugar.CloudSearchResult`1.DataTable">
+        <member name="P:MySqlSugar.PubModel.Language.LanguageValue">
             <summary>
-            DataTable
+            数据库语言的VALUE
             </summary>
-        </member>
-        <member name="P:MySqlSugar.CloudSearchResult`1.ConnectionString">
-            <summary>
-            连接字符串
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.CloudSearchResult`1.Count">
-            <summary>
-            数量
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.Taskable`1">
-            <summary>
-            云计扩展类
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="P:MySqlSugar.Taskable`1.Tasks">
-            <summary>
-            任务
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Taskable`1.Sql">
-            <summary>
-            sql
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Taskable`1.WhereObj">
-            <summary>
-            数据库参数(例如:new{id=1,name="张三"})
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.TaskableWithCount`1">
-            <summary>
-            云计扩展类
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="P:MySqlSugar.TaskableWithCount`1.Tasks">
-            <summary>
-            任务
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.TaskableWithCount`1.Sql">
-            <summary>
-            sql
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.TaskableWithCount`1.WhereObj">
-            <summary>
-            数据库参数(例如:new{id=1,name="张三"})
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.SqlableExtensions">
-            <summary>
-            ** 描述：Sqlable扩展函数
-            ** 创始时间：2015-7-13
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.From(MySqlSugar.Sqlable,System.Object,System.String)">
-            <summary>
-            Form
-            </summary>
-            <param name="sqlable"></param>
-            <param name="modelObj">表名</param>
-            <param name="shortName">表名简写</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.From``1(MySqlSugar.Sqlable,System.String)">
-            <summary>
-            Form
-            </summary>
-            <param name="sqlable"></param>
-            <param name="modelObj">表名</param>
-            <param name="shortName">表名简写</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.Join(MySqlSugar.Sqlable,System.Object,System.String,System.String,System.String,MySqlSugar.JoinType)">
-            <summary>
-            Join
-            </summary>
-            <param name="sqlable"></param>
-            <param name="leftFiled">join左边连接字段</param>
-            <param name="RightFiled">join右边连接字段</param>
-            <param name="type">join类型</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.Join``1(MySqlSugar.Sqlable,System.String,System.String,System.String,MySqlSugar.JoinType)">
-            <summary>
-            Join
-            </summary>
-            <param name="sqlable"></param>
-            <param name="leftFiled">join左边连接字段</param>
-            <param name="RightFiled">join右边连接字段</param>
-            <param name="type">join类型</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.Where(MySqlSugar.Sqlable,System.String)">
-            <summary>
-            Where
-            </summary>
-            <param name="sqlable"></param>
-            <param name="where">查询条件、开头无需写 AND或者WHERE</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.OrderBy(MySqlSugar.Sqlable,System.String)">
-            <summary>
-            OrderBy
-            </summary>
-            <param name="sqlable"></param>
-            <param name="orderBy">排序字段，可以多个</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.Apply(MySqlSugar.Sqlable,System.String,System.String,MySqlSugar.ApplyType)">
-            <summary>
-            Apply
-            </summary>
-            <param name="sqlable"></param>
-            <param name="applySql">apply主体内容</param>
-            <param name="shotName">apply简写</param>
-            <param name="type">Apply类型</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.GroupBy(MySqlSugar.Sqlable,System.String)">
-            <summary>
-            GroupBy
-            </summary>
-            <param name="sqlable"></param>
-            <param name="groupBy">GroupBy字段，可以多个</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToList``1(MySqlSugar.Sqlable,System.String,System.Object,System.String,System.String)">
-            <summary>
-            设置查询列执行查询，并且将结果集转成List《T》
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.GetAllParas(MySqlSugar.Sqlable,System.Object)">
-            <summary>
-            获取页面参数
-            </summary>
-            <param name="sqlable"></param>
-            <param name="whereObj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToDataTable(MySqlSugar.Sqlable,System.String,System.Object)">
-            <summary>
-            设置查询列执行查询，并且将结果集转成DataTable
-            </summary>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToJson(MySqlSugar.Sqlable,System.String,System.Object)">
-            <summary>
-            设置查询列执行查询，并且将结果集转成json
-            </summary>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToDynamic(MySqlSugar.Sqlable,System.String,System.Object)">
-            <summary>
-            设置查询列执行查询，并且将结果集转成dynamic
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.ToClass(MySqlSugar.Sqlable,System.String,System.Object)">
-            <summary>
-            生成查询结果对应的实体类字符串
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.Count(MySqlSugar.Sqlable,System.Object,System.String,System.String)">
-            <summary>
-            反回记录数
-            </summary>
-            <param name="sqlable"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageList``1(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
-            <summary>
-            设置查询列和分页参数执行查询，并且将结果集转成List《T》
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="orderByFiled">Order By字段，可以多个</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">每页显示数量</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageTable(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
-            <summary>
-            设置查询列和分页参数执行查询，并且将结果集转成DataTable
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="orderByFiled">Order By字段，可以多个</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">每页显示数量</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageJson(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
-            <summary>
-            设置查询列和分页参数执行查询，并且将结果集转成json
-            </summary>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="orderByFiled">Order By字段，可以多个</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">每页显示数量</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlableExtensions.SelectToPageDynamic(MySqlSugar.Sqlable,System.String,System.String,System.Int32,System.Int32,System.Object)">
-            <summary>
-            设置查询列和分页参数执行查询，并且将结果集转成dynamic
-            </summary>
-            <param name="sqlable"></param>
-            <param name="fileds">查询列</param>
-            <param name="orderByFiled">Order By字段，可以多个</param>
-            <param name="pageIndex">页码</param>
-            <param name="pageSize">每页显示数量</param>
-            <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
-            <returns></returns>
-        </member>
-        <member name="T:MySqlSugar.JsonConverter">
-            <summary>
-            作者热心的：dukang
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.DataTableToJson(System.Data.DataTable)">
-            <summary>
-            dataTable转成JSON
-            add sunkaixuan 
-            </summary>
-            <param name="table"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.JsonClass(System.Object)">
-            <summary>
-            自定义查询对象转换动态类
-            add dukang by 2016-05-19
-            </summary>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.Serialize(System.Object,System.Boolean)">
-            <summary>
-            object动态类转换json包
-            add dukang by 2016-05-19
-            </summary>
-            <param name="obj">对象</param>
-            <param name="DateConvert">时间戳是否转换成日期类型</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.ConvertJson(System.String)">
-            <summary>
-            json转换object动态类
-            add duk by 2016-05-19
-            </summary>
-            <param name="json"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.IDataReader)">
-            <summary>   
-            DataReader转换为Json   
-            </summary>   
-            <param name="dataReader">DataReader对象</param>   
-            <returns>Json字符串</returns>   
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataSet)">
-            <summary>   
-            DataSet转换为Json   
-            add dukang by 2016-05-19
-            </summary>   
-            <param name="dataSet">DataSet对象</param>   
-            <returns>Json字符串</returns>   
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataTable,System.String)">
-            <summary>  
-            DataTable转成Json   
-            add dukang by 2016-05-19
-            </summary>  
-            <param name="jsonName"></param>  
-            <param name="dt"></param>  
-            <returns></returns>  
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataTable)">
-            <summary>   
-            Datatable转换为Json   
-            add dukang by 2016-05-19
-            </summary>   
-            <param name="table">Datatable对象</param>   
-            <returns>Json字符串</returns>   
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.StringFormat(System.String,System.Type)">
-            <summary>  
-            格式化字符型、日期型、布尔型  
-            add dukang by 2016-05-19
-            </summary>  
-            <param name="str"></param>  
-            <param name="type"></param>  
-            <returns></returns>  
-        </member>
-        <member name="M:MySqlSugar.JsonConverter.String2Json(System.String)">
-            <summary>  
-            过滤特殊字符  
-            add dukang by 2016-05-19
-            </summary>  
-            <param name="s"></param>  
-            <returns></returns>  
-        </member>
-        <member name="T:MySqlSugar.DynamicJsonObject">
-            <summary>
-            动态JSON解析
-            add dukang by 2016-05-19
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.DynamicJsonConverter">
-            <summary>
-            动态JSON转换
-            add dukang by 2016-05-19
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.Sqlable">
-            <summary>
-            ** 描述：Queryable是多表查询基类，基于拥有大量查询扩展函数
-            ** 创始时间：2015-7-13
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Sqlable.DB">
-            <summary>
-            数据接口
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Sqlable.Where">
-            <summary>
-            Where临时数据
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Sqlable.Params">
-            <summary>
-            参数
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Sqlable.Sql">
-            <summary>
-            sql临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Sqlable.OrderBy">
-            <summary>
-            OrderBy临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Sqlable.GroupBy">
-            <summary>
-            GroupBy临时数据
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.CloudPubMethod.GetPageIndex(System.Int32,System.Double)">
-            <summary>
-            获取pageIndex
-            </summary>
-            <param name="pageIndex"></param>
-            <param name="configCount"></param>
-        </member>
-        <member name="M:MySqlSugar.CloudPubMethod.GetConnection(System.Collections.Generic.List{MySqlSugar.CloudConnectionConfig})">
-            <summary>
-            根据rate获取随机Connection
-            </summary>
-            <param name="configList"></param>
-        </member>
-        <member name="M:MySqlSugar.CloudPubMethod.TaskFactory``1(System.Func{System.Int32,``0},System.Threading.Tasks.Task{``0}[],System.Int32)">
-            <summary>
-            并行执行任务并且传入索引
-            </summary>
-            <param name="method">函数参数i</param>
-            <param name="tasks">task数组</param>
-            <param name="i">索引</param>
-        </member>
-        <member name="M:MySqlSugar.CloudPubMethod.GetIsSmallPageIndex(System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            分页索引是否很小
-            </summary>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <param name="configCount"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.CloudPubMethod.GetIsSmallPageIndexByReverse(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            倒数分页索引是否很小
-            </summary>
-            <param name="pageIndex"></param>
-            <param name="pageSize"></param>
-            <param name="configCount"></param>
-            <returns></returns>
-        </member>
-        <member name="T:MySqlSugar.SqlSugarTool">
-            <summary>
-            ** 描述：SqlSugar工具类
-            ** 创始时间：2015-7-13
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.DataReaderToList``1(System.Type,System.Data.IDataReader,System.String,System.Boolean,System.Boolean)">
-            <summary>
-            Reader转成List《T》
-            </summary>
-            <typeparam name="TResult"></typeparam>
-            <param name="dr"></param>
-            <param name="isClose"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetParameters(System.Object)">
-            <summary>
-            将实体对象转换成SqlParameter[] 
-            </summary>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetObjectToDictionary(System.Object)">
-            <summary>
-            将实体对象转换成 Dictionary《string, string》
-            </summary>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetGetPropertiesByCache(System.Type,System.String,MySqlSugar.CacheManager{System.Reflection.PropertyInfo[]})">
-            <summary>
-            获取type属性cache
-            </summary>
-            <param name="type"></param>
-            <param name="cachePropertiesKey"></param>
-            <param name="cachePropertiesManager"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.IsPrimaryKey(MySqlSugar.SqlSugarClient,System.String)">
-            <summary>
-            判段是否包含主键
-            </summary>
-            <param name="db"></param>
-            <param name="tableName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetIdentitiesKeyByTableName(MySqlSugar.SqlSugarClient,System.String)">
-             <summary>
-            根据表名获取自添列 keyTableName Value columnName
-             </summary>
-             <param name="db"></param>
-             <param name="tableName"></param>
-             <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetPrimaryKeyByTableName(MySqlSugar.SqlSugarClient,System.String)">
-            <summary>
-            根据表获取主键
-            </summary>
-            <param name="db"></param>
-            <param name="tableName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.SqlLikeWordEncode(System.String)">
-            <summary>
-            处理like条件的通配符
-            </summary>
-            <param name="word"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetPropertyValue(System.Object,System.String)">
-            <summary>
-            获取属性值
-            </summary>
-            <param name="obj"></param>
-            <param name="property"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.PackagingSQL(System.String,System.String)">
-            <summary>
-            包装SQL
-            </summary>
-            <param name="sql"></param>
-            <param name="shortName"></param>
-            <returns></returns>
-        </member>
-        <member name="F:MySqlSugar.SqlSugarTool.SpecialRequestForm">
-            <summary>
-            使用页面自动填充sqlParameter时 Request.Form出现特殊字符时可以重写Request.Form方法，使用时注意加锁并且用到将该值设为null
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetParameterDictionary(System.Boolean)">
-            <summary>
-            获取参数到键值集合根据页面Request参数
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.SqlSugarTool.GetParameterArray(System.Boolean)">
-            <summary>
-            获取参数到键值集合根据页面Request参数
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:MySqlSugar.ResolveExpress">
-            <summary>
-            ** 描述：拉姆达解析类
-            ** 创始时间：2015-7-20
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** qq：610262374 
-            ** 使用说明：使用请注名作者
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.ResolveExpress.CreateSqlElements(System.Linq.Expressions.Expression,MySqlSugar.ResolveExpress.MemberType@,System.Boolean)">
-            <summary>
-            递归解析表达式路由计算
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.ResolveExpress.GetOperator(System.Linq.Expressions.ExpressionType)">
-            <summary>
-            根据条件生成对应的sql查询操作符
-            </summary>
-            <param name="expressiontype"></param>
-            <returns></returns>
         </member>
         <member name="M:MySqlSugar.TaskExtensions.Count(MySqlSugar.Taskable{System.Int32})">
             <summary>
@@ -1697,6 +1334,567 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.SqlSugarTool">
+            <summary>
+            ** 描述：SqlSugar工具类
+            ** 创始时间：2015-7-13
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.DataReaderToList``1(System.Type,System.Data.IDataReader,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Reader转成List《T》
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <param name="dr"></param>
+            <param name="isClose"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetParameters(System.Object)">
+            <summary>
+            将实体对象转换成SqlParameter[] 
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetObjectToDictionary(System.Object)">
+            <summary>
+            将实体对象转换成 Dictionary《string, string》
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetGetPropertiesByCache(System.Type,System.String,MySqlSugar.CacheManager{System.Reflection.PropertyInfo[]})">
+            <summary>
+            获取type属性cache
+            </summary>
+            <param name="type"></param>
+            <param name="cachePropertiesKey"></param>
+            <param name="cachePropertiesManager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.IsPrimaryKey(MySqlSugar.SqlSugarClient,System.String)">
+            <summary>
+            判段是否包含主键
+            </summary>
+            <param name="db"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetIdentitiesKeyByTableName(MySqlSugar.SqlSugarClient,System.String)">
+             <summary>
+            根据表名获取自添列 keyTableName Value columnName
+             </summary>
+             <param name="db"></param>
+             <param name="tableName"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetPrimaryKeyByTableName(MySqlSugar.SqlSugarClient,System.String)">
+            <summary>
+            根据表获取主键
+            </summary>
+            <param name="db"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.SqlLikeWordEncode(System.String)">
+            <summary>
+            处理like条件的通配符
+            </summary>
+            <param name="word"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            获取属性值
+            </summary>
+            <param name="obj"></param>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.PackagingSQL(System.String,System.String)">
+            <summary>
+            包装SQL
+            </summary>
+            <param name="sql"></param>
+            <param name="shortName"></param>
+            <returns></returns>
+        </member>
+        <member name="F:MySqlSugar.SqlSugarTool.SpecialRequestForm">
+            <summary>
+            使用页面自动填充sqlParameter时 Request.Form出现特殊字符时可以重写Request.Form方法，使用时注意加锁并且用到将该值设为null
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetParameterDictionary(System.Boolean)">
+            <summary>
+            获取参数到键值集合根据页面Request参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarTool.GetParameterArray(System.Boolean)">
+            <summary>
+            获取参数到键值集合根据页面Request参数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.IsWhatExtenions">
+            <summary>
+            ** 描述：逻辑判段是什么？
+            ** 创始时间：2015-5-29
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4539654.html
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsInRange(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            值在的范围？
+            </summary>
+            <param name="thisValue"></param>
+            <param name="begin">大于等于begin</param>
+            <param name="end">小于等于end</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsInRange(System.DateTime,System.DateTime,System.DateTime)">
+            <summary>
+            值在的范围？
+            </summary>
+            <param name="thisValue"></param>
+            <param name="begin">大于等于begin</param>
+            <param name="end">小于等于end</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsIn``1(``0,``0[])">
+            <summary>
+            在里面吗?
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="thisValue"></param>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsContainsIn(System.String,System.String[])">
+            <summary>
+            在里面吗?
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="thisValue"></param>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Object)">
+            <summary>
+            是null或""?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Nullable{System.Guid})">
+            <summary>
+            是null或""?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Guid)">
+            <summary>
+            是null或""?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsValuable(System.Object)">
+            <summary>
+            有值?(与IsNullOrEmpty相反)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsValuable(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            有值?(与IsNullOrEmpty相反)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsZero(System.Object)">
+            <summary>
+            是零?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsInt(System.Object)">
+            <summary>
+            是INT?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsNoInt(System.Object)">
+            <summary>
+            不是INT?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsMoney(System.Object)">
+            <summary>
+            是金钱?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsDate(System.Object)">
+            <summary>
+            是时间?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsEamil(System.Object)">
+            <summary>
+            是邮箱?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsMobile(System.Object)">
+            <summary>
+            是手机?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsTelephone(System.Object)">
+            <summary>
+            是座机?
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsIDcard(System.Object)">
+            <summary>
+            是身份证?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsFax(System.Object)">
+            <summary>
+            是传真?
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IsWhatExtenions.IsMatch(System.Object,System.String)">
+             <summary>
+            是适合正则匹配?
+             </summary>
+             <param name="thisValue"></param>
+             <param name="begin">大于等于begin</param>
+             <param name="end">小于等于end</param>
+             <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.ClassGenerating">
+            <summary>
+            ** 描述：实体生成类
+            ** 创始时间：2015-4-17
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** qq：610262374 欢迎交流,共同提高 ,命名语法等写的不好的地方欢迎大家的给出宝贵建议
+            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4482152.html
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.DynamicToClass(System.Object,System.String)">
+            <summary>
+            根据匿名类获取实体类的字符串
+            </summary>
+            <param name="entity">匿名对象</param>
+            <param name="className">生成的类名</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.DataTableToClass(System.Data.DataTable,System.String,System.String,System.Collections.Generic.List{MySqlSugar.PubModel.DataTableMap})">
+            <summary>
+            根据DataTable获取实体类的字符串
+            </summary>
+            <param name="sql"></param>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.SqlToClass(MySqlSugar.SqlSugarClient,System.String,System.String)">
+            <summary>
+            根据SQL语句获取实体类的字符串
+            </summary>
+            <param name="db"></param>
+            <param name="sql"></param>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.TableNameToClass(MySqlSugar.SqlSugarClient,System.String)">
+            <summary>
+            根据表名获取实体类的字符串
+            </summary>
+            <param name="db"></param>
+            <param name="sql"></param>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.CreateClassFiles(MySqlSugar.SqlSugarClient,System.String,System.String,System.Nullable{System.Boolean},System.Action{System.String})">
+            <summary>
+            创建SQL实体文件
+            </summary>
+            <param name="db"></param>
+            <param name="fileDirectory"></param>
+            <param name="nameSpace">命名空间（默认：null）</param>
+            <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.CreateClassFilesInterface(MySqlSugar.SqlSugarClient,System.Nullable{System.Boolean},System.Action{System.Data.DataTable,System.String,System.String})">
+            <summary>
+            创建SQL实体文件
+            </summary>
+            <param name="db"></param>
+            <param name="fileDirectory"></param>
+            <param name="nameSpace">命名空间（默认：null）</param>
+            <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.CreateClassFilesByTableNames(MySqlSugar.SqlSugarClient,System.String,System.String,System.String[])">
+            <summary>
+             创建SQL实体文件,指定表名
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.GetTableNames(MySqlSugar.SqlSugarClient)">
+            <summary>
+            获取所有数据库表名
+            </summary>
+            <param name="db"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.ClassGenerating.ChangeType(System.Type)">
+            <summary>
+            匹配类型
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MySqlSugar.Check">
+            <summary>
+            ** 描述：逻辑出错抛出异常
+            ** 创始时间：2015-7-19
+            ** 修改时间：-
+            ** 作者：sunkaixuan
+            ** 修改人：sunkaixuan
+            ** 使用说明：
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.Check.ArgumentNullException(System.Object,System.String)">
+            <summary>
+            使用导致此异常的参数的名称初始化 System.ArgumentNullException 类的新实例。
+            </summary>
+            <param name="checkObj"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:MySqlSugar.Check.Exception(System.Boolean,System.String,System.String[])">
+            <summary>
+            使用指定的错误消息初始化 System.Exception 类的新实例。
+            </summary>
+            <param name="isException"></param>
+            <param name="message"></param>
+            <param name="args"></param>
+        </member>
+        <member name="T:MySqlSugar.IEnumerableExtensions">
+            <summary>
+            IEnumerable扩展函数
+            </summary>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String,MySqlSugar.OrderByType)">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenBy``1(System.Linq.IOrderedEnumerable{``0},System.String,MySqlSugar.OrderByType)">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow``1(System.Collections.Generic.IEnumerable{``0},System.String,MySqlSugar.OrderByType)">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRow``1(System.Linq.IOrderedEnumerable{``0},System.String,MySqlSugar.OrderByType)">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenBy``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRow(System.Collections.Generic.IEnumerable{System.Data.DataRow},System.Collections.Generic.List{MySqlSugar.OrderByDictionary},MySqlSugar.OrderByDictionary)">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRow``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByReverse``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByReverse``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.OrderByDataRowReverse``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ThenByDataRowReverse``1(System.Linq.IOrderedEnumerable{``0},System.Collections.Generic.List{MySqlSugar.OrderByDictionary})">
+            <summary>
+            排序
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="sortField"></param>
+            <param name="orderByType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.IEnumerableExtensions.ConvertField(System.Object)">
+            <summary>
+            解决GUID在SQL和C#中，排序方式不一致
+            </summary>
+            <param name="thisValue"></param>
+            <returns></returns>
+        </member>
+        <!-- 对于成员“T:MySqlSugar.SqlSugarToolExtensions”忽略有格式错误的 XML 注释 -->
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToJoinSqlInVal``1(``0[])">
+            <summary>
+            数组字串转换成SQL参数格式，例如: 参数 new int{1,2,3} 反回 "'1','2','3'"
+            </summary>
+            <param name="array"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSqlValue(System.String)">
+            <summary>
+            将字符串转换成SQL参数格式，例如: 参数value返回'value'
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSqlFilter(System.String)">
+            <summary>
+            SQL关键字过滤,过滤拉姆达式中的特殊字符，出现特殊字符则引发异常
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ToSuperSqlFilter(System.String)">
+            <summary>
+             指定数据类型，如果不在指定类当中则引发异常(只允许输入指定字母、数字、下划线、时间、GUID)
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetLockString(System.Boolean)">
+            <summary>
+            获取锁字符串
+            </summary>
+            <param name="isNoLock"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetSelectFiles(System.String)">
+            <summary>
+            获取Select需要的字段
+            </summary>
+            <param name="selectFileds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.GetGroupBy(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="groupByFileds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.RequestParasToSqlParameters(MySql.Data.MySqlClient.MySqlParameterCollection)">
+            <summary>
+            将Request里的参数转成SqlParameter[]
+            </summary>
             <returns></returns>
         </member>
         <member name="T:MySqlSugar.QueryableExtensions">
@@ -1927,183 +2125,6 @@
             <param name="pageSize">每页显示数量</param>
             <returns></returns>
         </member>
-        <member name="T:MySqlSugar.Check">
-            <summary>
-            ** 描述：逻辑出错抛出异常
-            ** 创始时间：2015-7-19
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 修改人：sunkaixuan
-            ** 使用说明：
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.Check.ArgumentNullException(System.Object,System.String)">
-            <summary>
-            使用导致此异常的参数的名称初始化 System.ArgumentNullException 类的新实例。
-            </summary>
-            <param name="checkObj"></param>
-            <param name="message"></param>
-        </member>
-        <member name="M:MySqlSugar.Check.Exception(System.Boolean,System.String,System.String[])">
-            <summary>
-            使用指定的错误消息初始化 System.Exception 类的新实例。
-            </summary>
-            <param name="isException"></param>
-            <param name="message"></param>
-            <param name="args"></param>
-        </member>
-        <member name="T:MySqlSugar.IsWhatExtenions">
-            <summary>
-            ** 描述：逻辑判段是什么？
-            ** 创始时间：2015-5-29
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4539654.html
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsInRange(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            值在的范围？
-            </summary>
-            <param name="thisValue"></param>
-            <param name="begin">大于等于begin</param>
-            <param name="end">小于等于end</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsInRange(System.DateTime,System.DateTime,System.DateTime)">
-            <summary>
-            值在的范围？
-            </summary>
-            <param name="thisValue"></param>
-            <param name="begin">大于等于begin</param>
-            <param name="end">小于等于end</param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsIn``1(``0,``0[])">
-            <summary>
-            在里面吗?
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="thisValue"></param>
-            <param name="values"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsContainsIn(System.String,System.String[])">
-            <summary>
-            在里面吗?
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="thisValue"></param>
-            <param name="values"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Object)">
-            <summary>
-            是null或""?
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Nullable{System.Guid})">
-            <summary>
-            是null或""?
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsNullOrEmpty(System.Guid)">
-            <summary>
-            是null或""?
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsValuable(System.Object)">
-            <summary>
-            有值?(与IsNullOrEmpty相反)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsValuable(System.Collections.Generic.IEnumerable{System.Object})">
-            <summary>
-            有值?(与IsNullOrEmpty相反)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsZero(System.Object)">
-            <summary>
-            是零?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsInt(System.Object)">
-            <summary>
-            是INT?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsNoInt(System.Object)">
-            <summary>
-            不是INT?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsMoney(System.Object)">
-            <summary>
-            是金钱?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsDate(System.Object)">
-            <summary>
-            是时间?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsEamil(System.Object)">
-            <summary>
-            是邮箱?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsMobile(System.Object)">
-            <summary>
-            是手机?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsTelephone(System.Object)">
-            <summary>
-            是座机?
-            </summary>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsIDcard(System.Object)">
-            <summary>
-            是身份证?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsFax(System.Object)">
-            <summary>
-            是传真?
-            </summary>
-            <param name="thisValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MySqlSugar.IsWhatExtenions.IsMatch(System.Object,System.String)">
-             <summary>
-            是适合正则匹配?
-             </summary>
-             <param name="thisValue"></param>
-             <param name="begin">大于等于begin</param>
-             <param name="end">小于等于end</param>
-             <returns></returns>
-        </member>
         <member name="T:MySqlSugar.JoinType">
             <summary>
             join类型
@@ -2124,124 +2145,103 @@
             分页类型
             </summary>
         </member>
-        <member name="T:MySqlSugar.LanguageHelper">
+        <member name="T:MySqlSugar.JsonConverter">
             <summary>
-            多语言帮助类
+            作者热心的：dukang
             </summary>
         </member>
-        <member name="M:MySqlSugar.LanguageHelper.UpdateView(MySqlSugar.PubModel.Language,MySqlSugar.SqlSugarClient)">
+        <member name="M:MySqlSugar.JsonConverter.DataTableToJson(System.Data.DataTable)">
             <summary>
-            创建多语言视图，带有LanguageId=1的所有有视图1替换成languageValue 并且新创视图 名称为 原有视图名+_$_+suffix
+            dataTable转成JSON
+            add sunkaixuan 
             </summary>
+            <param name="table"></param>
             <returns></returns>
         </member>
-        <member name="T:MySqlSugar.Queryable`1">
+        <member name="M:MySqlSugar.JsonConverter.JsonClass(System.Object)">
             <summary>
-            ** 描述：Queryable是单表查询基类，基于拥有大量查询扩展函数
-            ** 创始时间：2015-7-13
-            ** 修改时间：-
-            ** 作者：sunkaixuan
-            ** 使用说明：
+            自定义查询对象转换动态类
+            add dukang by 2016-05-19
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.Serialize(System.Object,System.Boolean)">
+            <summary>
+            object动态类转换json包
+            add dukang by 2016-05-19
+            </summary>
+            <param name="obj">对象</param>
+            <param name="DateConvert">时间戳是否转换成日期类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.ConvertJson(System.String)">
+            <summary>
+            json转换object动态类
+            add duk by 2016-05-19
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.IDataReader)">
+            <summary>   
+            DataReader转换为Json   
+            </summary>   
+            <param name="dataReader">DataReader对象</param>   
+            <returns>Json字符串</returns>   
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataSet)">
+            <summary>   
+            DataSet转换为Json   
+            add dukang by 2016-05-19
+            </summary>   
+            <param name="dataSet">DataSet对象</param>   
+            <returns>Json字符串</returns>   
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataTable,System.String)">
+            <summary>  
+            DataTable转成Json   
+            add dukang by 2016-05-19
+            </summary>  
+            <param name="jsonName"></param>  
+            <param name="dt"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.ToJson(System.Data.DataTable)">
+            <summary>   
+            Datatable转换为Json   
+            add dukang by 2016-05-19
+            </summary>   
+            <param name="table">Datatable对象</param>   
+            <returns>Json字符串</returns>   
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.StringFormat(System.String,System.Type)">
+            <summary>  
+            格式化字符型、日期型、布尔型  
+            add dukang by 2016-05-19
+            </summary>  
+            <param name="str"></param>  
+            <param name="type"></param>  
+            <returns></returns>  
+        </member>
+        <member name="M:MySqlSugar.JsonConverter.String2Json(System.String)">
+            <summary>  
+            过滤特殊字符  
+            add dukang by 2016-05-19
+            </summary>  
+            <param name="s"></param>  
+            <returns></returns>  
+        </member>
+        <member name="T:MySqlSugar.DynamicJsonObject">
+            <summary>
+            动态JSON解析
+            add dukang by 2016-05-19
             </summary>
         </member>
-        <member name="F:MySqlSugar.Queryable`1.DB">
+        <member name="T:MySqlSugar.DynamicJsonConverter">
             <summary>
-            数据接口
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Queryable`1.Where">
-            <summary>
-            Where临时数据
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Queryable`1.Params">
-            <summary>
-            SqlParameter临时数据
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.Queryable`1.WhereIndex">
-            <summary>
-            条件索引
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.TName">
-            <summary>
-            T的名称
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.Type">
-            <summary>
-            实体类型
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.Skip">
-            <summary>
-            Skip临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.Take">
-            <summary>
-            Take临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.OrderBy">
-            <summary>
-            Order临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.Select">
-            <summary>
-            Select临时数据
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.TableName">
-            <summary>
-            表名
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.Queryable`1.GroupBy">
-            <summary>
-            分组查询
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.PubModel.SerialNumber">
-            <summary>
-            流水号设置实体
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.PubModel.SerialNumber.GetNumFunc">
-            <summary>
-            获取流水号函数
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.PubModel.Language">
-            <summary>
-            语言
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.PubModel.Language.ReplaceViewStringKey">
-            <summary>
-            需要全局替换的字符串Key(用于替换默认语言)
-            </summary>
-        </member>
-        <member name="F:MySqlSugar.PubModel.Language.ReplaceViewStringValue">
-            <summary>
-            需要全局替换的字符串Value(用于替换默认语言)
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.PubModel.Language.Suffix">
-            <summary>
-            数据库里面的语言后缀
-            </summary>
-        </member>
-        <member name="P:MySqlSugar.PubModel.Language.LanguageValue">
-            <summary>
-            数据库语言的VALUE
-            </summary>
-        </member>
-        <member name="T:MySqlSugar.IDataRecordExtensions">
-            <summary>
-            DataRecord扩展
+            动态JSON转换
+            add dukang by 2016-05-19
             </summary>
         </member>
     </members>

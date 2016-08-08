@@ -4,4 +4,10 @@ G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySql.Data.dl
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.dll
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.pdb
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.XML
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.XML
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.dll
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySqlSugar.pdb
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\bin\Debug\MySql.Data.dll
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.dll
+C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.pdb
 C:\Users\ss去\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\SqlSugar\obj\Debug\MySqlSugar.csprojResolveAssemblyReference.cache
