@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>sqlSugar</id>
-    <version>2.3.6.9</version>
-    <title>SqlSugar ORM</title>
+    <id>mySqlSugar</id>
+    <version>1.0.0.1</version>
+    <title>MySqlSugarORM </title>
     <authors>sun kaixuan</authors>
     <owners>landa</owners>
      <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
