@@ -105,6 +105,16 @@ namespace MySqlSugar
         }
 
 
+        private static void CheckType(List<string> errorTypes, string objType, string dbType, string field)
+        {
+            var isAny = errorTypes.Contains(objType);
+            if (isAny)
+            {
+                throw new Exception(string.Format("{0} can't  convert {1} to {2}", field, dbType, objType));
+            }
+        }
+
+
         /// <summary>
         /// 动态获取IDataRecord里面的函数
         /// </summary>
@@ -112,6 +122,13 @@ namespace MySqlSugar
         /// <param name="pro"></param>
         private static void GeneratorCallMethod(ILGenerator generator, Type type, bool isNullable, PropertyInfo pro, string dbTypeName, string fieldName)
         {
+            List<string> guidThrow = new List<string>() { "int32", "datetime", "decimal", "double", "byte", "string" };//数据库为GUID有错的实体类形
+            List<string> intThrow = new List<string>() { "datetime", "byte" };//数据库为int有错的实体类形
+            List<string> stringThrow = new List<string>() { "int32", "datetime", "decimal", "double", "byte", "guid" };//数据库为vachar有错的实体类形
+            List<string> decimalThrow = new List<string>() { "datetime", "byte", "guid" };
+            List<string> doubleThrow = new List<string>() { "datetime", "byte", "guid" };
+            List<string> dateThrow = new List<string>() { "int32", "decimal", "double", "byte", "guid" };
+            List<string> shortThrow = new List<string>() { "datetime", "guid" };
             MethodInfo method = null;
             var typeName = ChangeDBTypeToCSharpType(dbTypeName);
             var objTypeName = type.Name.ToLower();
@@ -125,35 +142,58 @@ namespace MySqlSugar
                 switch (typeName)
                 {
                     case "int":
+                        CheckType(intThrow, objTypeName, typeName, fieldName);
                         var isNotInt = objTypeName != "int32";
                         if (isNotInt)
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertInt32; break;
                     case "bool":
-                        method = getConvertBoolean; break;
+                        if (objTypeName != "bool" && objTypeName != "boolean")
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertBoolean; break;
                     case "string":
+                        CheckType(stringThrow, objTypeName, typeName, fieldName);
                         method = getString; break;
                     case "dateTime":
-                        method = getConvertDateTime; break;
+                        CheckType(dateThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "datetime")
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertDateTime; break;
                     case "decimal":
+                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
                         var isNotDecimal = objTypeName != "decimal";
                         if (isNotDecimal)
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertDecimal; break;
                     case "double":
+                        CheckType(doubleThrow, objTypeName, typeName, fieldName);
                         var isNotDouble = objTypeName != "double";
                         if (isNotDouble)
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertDouble; break;
                     case "guid":
-                        method = getConvertGuid; break;
+                        CheckType(guidThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "guid")
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertGuid; break;
                     case "byte":
                         method = getConvertByte; break;
                     case "ENUMNAME":
                         method = getConvertToEnum_Nullable.MakeGenericMethod(type); break;
+                    case "short":
+                        CheckType(shortThrow, objTypeName, typeName, fieldName);
+                        var isNotShort = objTypeName != "int16" && objTypeName != "short";
+                        if (isNotShort)
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertInt16;
+                        break;
                     default:
                         method = getOtherNull.MakeGenericMethod(type); break;
                 }
@@ -166,35 +206,58 @@ namespace MySqlSugar
                 switch (typeName)
                 {
                     case "int":
+                        CheckType(intThrow, objTypeName, typeName, fieldName);
                         var isNotInt = objTypeName != "int32";
                         if (isNotInt)
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getInt32; break;
                     case "bool":
-                        method = getBoolean; break;
+                        if (objTypeName != "bool" && objTypeName != "boolean")
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getBoolean; break;
                     case "string":
+                        CheckType(stringThrow, objTypeName, typeName, fieldName);
                         method = getString; break;
                     case "dateTime":
-                        method = getDateTime; break;
+                        CheckType(dateThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "datetime")
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getDateTime; break;
                     case "decimal":
+                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
                         var isNotDecimal = objTypeName != "decimal";
                         if (isNotDecimal)
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getDecimal; break;
                     case "double":
+                        CheckType(doubleThrow, objTypeName, typeName, fieldName);
                         var isNotDouble = objTypeName != "double";
                         if (isNotDouble)
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getDouble; break;
                     case "guid":
-                        method = getGuid; break;
+                        CheckType(guidThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "guid")
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getGuid; break;
                     case "byte":
                         method = getByte; break;
                     case "ENUMNAME":
                         method = getValueMethod; break;
+                    case "short":
+                        CheckType(shortThrow, objTypeName, typeName, fieldName);
+                        var isNotShort = objTypeName != "int16" && objTypeName != "short";
+                        if (isNotShort)
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getInt16;
+                        break;
                     default: method = getOther.MakeGenericMethod(type); break; ;
 
                 }
