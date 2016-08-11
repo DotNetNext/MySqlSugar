@@ -36,3 +36,4 @@ G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\WebTest\bin\WebTest.pdb
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\WebTest\bin\MySql.Data.dll
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\WebTest\bin\MySqlSugar.dll
 G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\WebTest\bin\MySqlSugar.pdb
+G:\OneDrive\Asp.net\Project\MySqlSugar\SqlSugar\WebTest\bin\MySqlSugar.xml

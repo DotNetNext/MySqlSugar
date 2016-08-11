@@ -170,19 +170,19 @@ namespace WebTest.Demo
                 var first2 = db.Queryable<Student>().Where(c => c.id == 1).FirstOrDefault();
 
                 //取10-20条
-                var page1 = db.Queryable<Student>().Where(c => c.id > 2).OrderBy("id").Skip(2).Take(3).ToList();
+                var page1 = db.Queryable<Student>().Where(c => c.id > 2).OrderBy(it=>it.id).Skip(2).Take(3).ToList();
 
                 //上一句的简化写法，同样取10-20条
-                var page2 = db.Queryable<Student>().Where(c => c.id > 1).OrderBy("id").ToPageList(2, 3);
+                var page2 = db.Queryable<Student>().Where(c => c.id > 1).OrderBy(it => it.id).ToPageList(2, 3);
 
                 //查询条数
                 var count = db.Queryable<Student>().Where(c => c.id > 10).Count();
 
                 //从第2条开始以后取所有
-                var skip = db.Queryable<Student>().Where(c => c.id > 10).OrderBy("id").Skip(2).ToList();
+                var skip = db.Queryable<Student>().Where(c => c.id > 10).OrderBy(it => it.id).Skip(2).ToList();
 
                 //取前2条
-                var take = db.Queryable<Student>().Where(c => c.id > 10).OrderBy("id").Take(2).ToList();
+                var take = db.Queryable<Student>().Where(c => c.id > 10).OrderBy(it => it.id).Take(2).ToList();
 
                 // Not like 
                 string conval = "三";
@@ -209,16 +209,25 @@ namespace WebTest.Demo
                 int maxId = db.Queryable<Student>().Max<Student, int>("id");
                 int minId = db.Queryable<Student>().Where(c => c.id > 0).Min<Student, int>("id");
 
-
+                //order By 
+                var orderList = db.Queryable<Student>().OrderBy("id desc,name asc").ToList();//字符串支持多个排序
+                //可以多个order by表达示
+                var order2List = db.Queryable<Student>().OrderBy(it => it.name).OrderBy(it => it.id, OrderByType.desc).ToList(); // order by name as ,order by id desc
 
                 //In
-                var list1= db.Queryable<Student>().In("id", "1", "2", "3").ToList();
-                var list2=db.Queryable<Student>().In("id", new string[] { "1", "2", "3" }).ToList();
-                var list3=db.Queryable<Student>().In("id", new List<string> { "1", "2", "3" }).ToList();
-                var list4 = db.Queryable<Student>().Where(it=>it.id<10).In("id", new List<string> { "1", "2", "3" }).ToList();
+                var intArray = new[] { "5", "2", "3" };
+                var intList = intArray.ToList();
+                var list0 = db.Queryable<Student>().In(it => it.id, 1, 2, 3).ToList();
+                var list1 = db.Queryable<Student>().In(it => it.id, intArray).ToList();
+                var list2 = db.Queryable<Student>().In("id", intArray).ToList();
+                var list3 = db.Queryable<Student>().In(it => it.id, intList).ToList();
+                var list4 = db.Queryable<Student>().In("id", intList).ToList();
 
                 //分组查询
-                var list5 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy("sex").Select<Student, SexTotal>("Sex,count(sex) AS count").ToList();
+                var list7 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy(it => it.sex).Select("sex,count(*) as Count").ToDynamic();
+                var list8 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy(it => it.sex).GroupBy(it => it.id).Select("id,sex, count(*) as Count").ToDynamic();
+                List<SexTotal> list9 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy(it => it.sex).Select<Student, SexTotal>("Sex, count(*) as Count").ToList();
+                List<SexTotal> list10 = db.Queryable<Student>().Where(c => c.id < 20).GroupBy("sex").Select<Student, SexTotal>("Sex, count(*) as Count").ToList();
                 //SELECT Sex,Count=count(*)  FROM Student  WHERE 1=1  AND  (id < 20)    GROUP BY Sex --生成结果
 
             }

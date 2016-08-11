@@ -35,6 +35,34 @@ namespace MySqlSugar
             return queryable;
         }
 
+        /// <summary>
+        /// 条件筛选 例如：expression 为 it=>it.a  inValues值为 new string[]{"a" ,"b"} 生成的SQL就是  a in('a','b')
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static  Queryable<T> In<T, FieldType>(this  Queryable<T> queryable, Expression<Func<T, object>> expression, List<FieldType> inValues)
+        {
+
+            ResolveExpress re = new ResolveExpress();
+            var InFieldName = re.GetExpressionRightFiled(expression);
+            return In<T, FieldType>(queryable, InFieldName, inValues);
+        }
+        /// <summary>
+        /// 条件筛选 例如：expression 为 it=>it.a  inValues值为 new string[]{"a" ,"b"} 生成的SQL就是  a in('a','b')
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static Queryable<T> In<T, FieldType>(this Queryable<T> queryable, Expression<Func<T, object>> expression, params FieldType[] inValues)
+        {
+
+            ResolveExpress re = new ResolveExpress();
+            var InFieldName = re.GetExpressionRightFiled(expression);
+            return In<T, FieldType>(queryable, InFieldName, inValues);
+        }
 
         /// <summary>
         /// 条件筛选 例如：InFieldName 为 a inValues 值为 new string[]{"a" ,"b"} 生成的SQL就是  a in('a','b')
@@ -80,7 +108,21 @@ namespace MySqlSugar
                 queryable.Params.AddRange(SqlSugarTool.GetParameters(whereObj));
             return queryable;
         }
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="orderFileds">如：id asc,name desc </param>
+        /// <returns></returns>
+        public static Queryable<T> OrderBy<T>(this Queryable<T> queryable, Expression<Func<T, object>> expression, OrderByType type = OrderByType.asc)
+        {
+            ResolveExpress re = new ResolveExpress();
+            var field = re.GetExpressionRightFiled(expression);
+            var pre = queryable.OrderBy.IsValuable() ? "," : "";
+            queryable.OrderBy += pre + field + " " + type.ToString().ToUpper();
+            return queryable;
+        }
         /// <summary>
         /// 排序
         /// </summary>
@@ -90,7 +132,23 @@ namespace MySqlSugar
         /// <returns></returns>
         public static Queryable<T> OrderBy<T>(this Queryable<T> queryable, string orderFileds)
         {
-            queryable.OrderBy = orderFileds.ToSuperSqlFilter();
+            var pre = queryable.GroupBy.IsValuable() ? "," : "";
+            queryable.OrderBy += pre + orderFileds.ToSuperSqlFilter();
+            return queryable;
+        }
+        /// <summary>
+        /// 分组
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="groupFileds">如：id,name </param>
+        /// <returns></returns>
+        public static Queryable<T> GroupBy<T>(this Queryable<T> queryable, Expression<Func<T, object>> expression)
+        {
+            ResolveExpress re = new ResolveExpress();
+            var field = re.GetExpressionRightFiled(expression);
+            var pre = queryable.GroupBy.IsValuable() ? "," : "";
+            queryable.GroupBy += pre + field;
             return queryable;
         }
         /// <summary>
@@ -102,7 +160,8 @@ namespace MySqlSugar
         /// <returns></returns>
         public static Queryable<T> GroupBy<T>(this Queryable<T> queryable, string groupFileds)
         {
-            queryable.GroupBy = groupFileds.ToSuperSqlFilter();
+            var pre = queryable.GroupBy.IsValuable() ? "," : "";
+            queryable.GroupBy += pre + groupFileds.ToSuperSqlFilter();
             return queryable;
         }
 
@@ -312,7 +371,19 @@ namespace MySqlSugar
             };
             return reval;
         }
-
+        /// <summary>
+        /// 将源数据对象转换到新对象中
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static Queryable<T> Select<T>(this Queryable<T> queryable, string select)
+        {
+            queryable.Select = select;
+            return queryable;
+        }
 
         /// <summary>
         /// 获取序列总记录数
@@ -334,6 +405,21 @@ namespace MySqlSugar
         }
 
 
+        /// <summary>
+        /// 获取最大值
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="maxField">列</param>
+        /// <returns></returns>
+        public static object Max<T>(this  Queryable<T> queryable, Expression<Func<T, object>> expression)
+        {
+
+            ResolveExpress re = new ResolveExpress();
+            var minField = re.GetExpressionRightFiled(expression);
+            return Max<T, object>(queryable, minField);
+        }
         /// <summary>
         /// 获取最大值
         /// </summary>
@@ -368,6 +454,21 @@ namespace MySqlSugar
             var objValue = queryable.DB.GetScalar(sbSql.ToString(), queryable.Params.ToArray());
             var reval = Convert.ChangeType(objValue, typeof(TResult));
             return (TResult)reval;
+        }
+
+        /// <summary>
+        /// 获取最小值
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable"></param>
+        /// <param name="minField">列</param>
+        /// <returns></returns>
+        public static object Min<T>(this  Queryable<T> queryable, Expression<Func<T, object>> expression)
+        {
+            ResolveExpress re = new ResolveExpress();
+            var minField = re.GetExpressionRightFiled(expression);
+            return Min<T, object>(queryable, minField);
         }
 
         /// <summary>

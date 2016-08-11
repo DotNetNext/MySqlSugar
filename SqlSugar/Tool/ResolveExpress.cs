@@ -26,7 +26,25 @@ namespace MySqlSugar
         public string SqlWhere = null;
         public List<MySqlParameter> Paras = new List<MySqlParameter>();
         private int SameIndex = 1;
-
+        public string GetExpressionRightFiled(Expression exp)
+        {
+            LambdaExpression lambda = exp as LambdaExpression;
+            if (lambda.Body.NodeType.IsIn(ExpressionType.Convert))
+            {
+                var memberExpr =
+                      ((UnaryExpression)lambda.Body).Operand as MemberExpression;
+                return memberExpr.Member.Name;
+            }
+            else if (lambda.Body.NodeType.IsIn(ExpressionType.MemberAccess))
+            {
+                return (lambda.Body as MemberExpression).Member.Name;
+            }
+            else
+            {
+                Check.Exception(true, "不是有效拉姆达格式" + exp.ToString());
+                return null;
+            }
+        }
         public void ResolveExpression(ResolveExpress re, Expression exp)
         {
             ResolveExpress.MemberType type = ResolveExpress.MemberType.None;
