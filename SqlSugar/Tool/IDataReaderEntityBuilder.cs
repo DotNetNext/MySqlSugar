@@ -137,6 +137,12 @@ namespace MySqlSugar
             {
                 typeName = "ENUMNAME";
             }
+            else if (typeName.IsIn("byte[]", "other"))
+            {
+                generator.Emit(OpCodes.Call, getValueMethod);
+                generator.Emit(OpCodes.Unbox_Any, pro.PropertyType);//找不到类型才执行拆箱（类型转换）
+                return;
+            }
             if (isNullable)
             {
                 switch (typeName)
@@ -282,6 +288,7 @@ namespace MySqlSugar
             string reval = string.Empty;
             switch (typeName.ToLower())
             {
+                case "integer":
                 case "int":
                     reval = "int";
                     break;
@@ -300,12 +307,14 @@ namespace MySqlSugar
                 case "char":
                     reval = "string";
                     break;
+                case "time":
                 case "datetime":
                     reval = "dateTime";
                     break;
                 case "decimal":
                     reval = "decimal";
                     break;
+                case "double":
                 case "float":
                     reval = "double";
                     break;
@@ -343,7 +352,7 @@ namespace MySqlSugar
                     reval = "dateTime";
                     break;
                 case "tinyint":
-                    reval = "byte[]";
+                    reval = "byte";
                     break;
                 case "uniqueidentifier":
                     reval = "guid";
@@ -358,7 +367,7 @@ namespace MySqlSugar
                     reval = "object";
                     break;
                 default:
-                    reval = "string";
+                    reval = "other";
                     break;
             }
             return reval;
