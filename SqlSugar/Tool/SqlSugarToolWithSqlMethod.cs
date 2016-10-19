@@ -270,11 +270,12 @@ namespace MySqlSugar
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>
-        internal static string ChangeDBTypeToCSharpType(string typeName)
+        public static string ChangeDBTypeToCSharpType(string typeName)
         {
             string reval = string.Empty;
             switch (typeName.ToLower())
             {
+                case "integer":
                 case "int":
                     reval = "int";
                     break;
@@ -293,13 +294,14 @@ namespace MySqlSugar
                 case "char":
                     reval = "string";
                     break;
+                case "time":
                 case "datetime":
                     reval = "dateTime";
                     break;
-                case "single":
                 case "decimal":
                     reval = "decimal";
                     break;
+                case "double":
                 case "float":
                     reval = "double";
                     break;
@@ -352,7 +354,7 @@ namespace MySqlSugar
                     reval = "object";
                     break;
                 default:
-                    reval = "string";
+                    reval = "other";
                     break;
             }
             return reval;

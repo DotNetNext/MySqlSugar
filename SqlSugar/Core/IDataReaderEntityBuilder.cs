@@ -148,11 +148,7 @@ namespace MySqlSugar
         /// 动态获取IDataRecord里面的函数
         /// </summary>
         /// <param name="generator"></param>
-        /// <param name="type"></param>
-        /// <param name="isNullable"></param>
         /// <param name="pro"></param>
-        /// <param name="dbTypeName"></param>
-        /// <param name="fieldName"></param>
         private static void GeneratorCallMethod(ILGenerator generator, Type type, bool isNullable, PropertyInfo pro, string dbTypeName, string fieldName)
         {
             List<string> guidThrow = new List<string>() { "int32", "datetime", "decimal", "double", "byte", "string" };//数据库为GUID有错的实体类形
@@ -162,16 +158,15 @@ namespace MySqlSugar
             List<string> doubleThrow = new List<string>() { "datetime", "byte", "guid" };
             List<string> dateThrow = new List<string>() { "int32", "decimal", "double", "byte", "guid" };
             List<string> shortThrow = new List<string>() { "datetime", "guid" };
-            List<string> byteThrow = new List<string>() { "datetime", "guid" };
             MethodInfo method = null;
-            var typeName = SqlSugarTool.ChangeDBTypeToCSharpType(dbTypeName);
+            var typeName =SqlSugarTool.ChangeDBTypeToCSharpType(dbTypeName);
             var objTypeName = type.Name.ToLower();
             var isEnum = type.IsEnum;
             if (isEnum)
             {
                 typeName = "ENUMNAME";
             }
-            else if (dbTypeName.Contains("hierarchyid") || typeName == "byte[]" || objTypeName == "object")
+            else if (typeName.IsIn("byte[]", "other"))
             {
                 generator.Emit(OpCodes.Call, getValueMethod);
                 generator.Emit(OpCodes.Unbox_Any, pro.PropertyType);//找不到类型才执行拆箱（类型转换）
@@ -188,13 +183,6 @@ namespace MySqlSugar
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertInt32; break;
-                    case "long":
-                        CheckType(intThrow, objTypeName, typeName, fieldName);
-                        var isNotLong = objTypeName != "int64";
-                        if (isNotLong)
-                            method = getOtherNull.MakeGenericMethod(type);
-                        else
-                            method = getConvetInt64; break;
                     case "bool":
                         if (objTypeName != "bool" && objTypeName != "boolean")
                             method = getOtherNull.MakeGenericMethod(type);
@@ -223,12 +211,6 @@ namespace MySqlSugar
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertDouble; break;
-                    case "float":
-                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
-                        if (objTypeName != "float" && objTypeName != "single")
-                            method = getOtherNull.MakeGenericMethod(type);
-                        else
-                            method = getConvertFloat; break;
                     case "guid":
                         CheckType(guidThrow, objTypeName, typeName, fieldName);
                         if (objTypeName != "guid")
@@ -236,11 +218,7 @@ namespace MySqlSugar
                         else
                             method = getConvertGuid; break;
                     case "byte":
-                        CheckType(byteThrow, objTypeName, typeName, fieldName);
-                        if (objTypeName != "byte")
-                            method = getOtherNull.MakeGenericMethod(type);
-                        else
-                            method = getConvertByte; break;
+                        method = getConvertByte; break;
                     case "ENUMNAME":
                         method = getConvertToEnum_Nullable.MakeGenericMethod(type); break;
                     case "short":
@@ -269,13 +247,6 @@ namespace MySqlSugar
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getInt32; break;
-                    case "long":
-                        CheckType(intThrow, objTypeName, typeName, fieldName);
-                        var isNotLong = objTypeName != "int64";
-                        if (isNotLong)
-                            method = getOther.MakeGenericMethod(type);
-                        else
-                            method = getInt64; break;
                     case "bool":
                         if (objTypeName != "bool" && objTypeName != "boolean")
                             method = getOther.MakeGenericMethod(type);
@@ -304,12 +275,6 @@ namespace MySqlSugar
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getDouble; break;
-                    case "float":
-                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
-                        if (objTypeName != "float" && objTypeName != "single")
-                            method = getOther.MakeGenericMethod(type);
-                        else
-                            method = getFloat; break;
                     case "guid":
                         CheckType(guidThrow, objTypeName, typeName, fieldName);
                         if (objTypeName != "guid")
@@ -317,11 +282,7 @@ namespace MySqlSugar
                         else
                             method = getGuid; break;
                     case "byte":
-                        CheckType(byteThrow, objTypeName, typeName, fieldName);
-                        if (objTypeName != "byte")
-                            method = getOther.MakeGenericMethod(type);
-                        else
-                            method = getByte; break;
+                        method = getByte; break;
                     case "ENUMNAME":
                         method = getValueMethod; break;
                     case "short":
@@ -332,9 +293,7 @@ namespace MySqlSugar
                         else
                             method = getInt16;
                         break;
-                    default:
-                        method = getOther.MakeGenericMethod(type);
-                        break; ;
+                    default: method = getOther.MakeGenericMethod(type); break; ;
 
                 }
 
