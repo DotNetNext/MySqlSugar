@@ -208,23 +208,23 @@ namespace SqlSugar
         public object GetScalar(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
-            sqlCommand.CommandType = CommandType;
+            MySqlCommand MySqlCommand = new MySqlCommand(sql, _MySqlConnection);
+            MySqlCommand.CommandType = CommandType;
             if (_tran != null)
             {
-                sqlCommand.Transaction = _tran;
+                MySqlCommand.Transaction = _tran;
             }
-            sqlCommand.CommandTimeout = this.CommandTimeOut;
+            MySqlCommand.CommandTimeout = this.CommandTimeOut;
             if (pars != null)
-                sqlCommand.Parameters.AddRange(pars);
+                MySqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToSqlParameters(MySqlCommand.Parameters);
             }
-            object scalar = sqlCommand.ExecuteScalar();
+            object scalar = MySqlCommand.ExecuteScalar();
             scalar = (scalar == null ? 0 : scalar);
             if (IsClearParameters)
-                sqlCommand.Parameters.Clear();
+                MySqlCommand.Parameters.Clear();
             ExecLogEvent(sql, pars, false);
             return scalar;
         }
@@ -249,22 +249,22 @@ namespace SqlSugar
         public int ExecuteCommand(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
-            sqlCommand.CommandType = CommandType;
-            sqlCommand.CommandTimeout = this.CommandTimeOut;
+            MySqlCommand MySqlCommand = new MySqlCommand(sql, _MySqlConnection);
+            MySqlCommand.CommandType = CommandType;
+            MySqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
             {
-                sqlCommand.Transaction = _tran;
+                MySqlCommand.Transaction = _tran;
             }
             if (pars != null)
-                sqlCommand.Parameters.AddRange(pars);
+                MySqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(MySqlCommand.Parameters);
             }
-            int count = sqlCommand.ExecuteNonQuery();
+            int count = MySqlCommand.ExecuteNonQuery();
             if (IsClearParameters)
-                sqlCommand.Parameters.Clear();
+                MySqlCommand.Parameters.Clear();
             ExecLogEvent(sql, pars, false);
             return count;
         }
@@ -289,22 +289,22 @@ namespace SqlSugar
         public SqlDataReader GetReader(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
-            sqlCommand.CommandType = CommandType;
-            sqlCommand.CommandTimeout = this.CommandTimeOut;
+            MySqlCommand MySqlCommand = new MySqlCommand(sql, _MySqlConnection);
+            MySqlCommand.CommandType = CommandType;
+            MySqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
             {
-                sqlCommand.Transaction = _tran;
+                MySqlCommand.Transaction = _tran;
             }
             if (pars != null)
-                sqlCommand.Parameters.AddRange(pars);
+                MySqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(MySqlCommand.Parameters);
             }
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            SqlDataReader sqlDataReader = MySqlCommand.ExecuteReader();
             if (IsClearParameters)
-                sqlCommand.Parameters.Clear();
+                MySqlCommand.Parameters.Clear();
             ExecLogEvent(sql, pars, false);
             return sqlDataReader;
         }

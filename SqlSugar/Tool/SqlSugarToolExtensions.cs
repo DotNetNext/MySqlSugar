@@ -105,9 +105,9 @@ namespace SqlSugar
         /// 将Request里的参数转成SqlParameter[]
         /// </summary>
         /// <returns></returns>
-        internal static void RequestParasToSqlParameters(SqlParameterCollection oldParas)
+        internal static void RequestParasToSqlParameters(MySqlParameterCollection oldParas)
         {
-            var oldParaList = oldParas.Cast<SqlParameter>().ToList();
+            var oldParaList = oldParas.Cast<MySqlParameter>().ToList();
             var paraDictionarAll = SqlSugarTool.GetParameterDictionary();
             if (paraDictionarAll != null && paraDictionarAll.Count() > 0)
             {
@@ -115,7 +115,7 @@ namespace SqlSugar
                 foreach (KeyValuePair<string, string> it in paraDictionarAll)
                 {
 
-                    var par = new SqlParameter("@" + it.Key, it.Value);
+                    var par = new MySqlParameter("@" + it.Key, it.Value);
                     if (!oldParaList.Any(oldPara => oldPara.ParameterName == ("@" + it.Key)))
                     {
                         oldParas.Add(par);
