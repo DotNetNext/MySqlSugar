@@ -16,7 +16,7 @@ namespace NewTest
         {
 
             //设置执行的DEMO
-            string switchOn = "ado";
+            string switchOn = "test";
             IDemos demo = null;
             switch (switchOn)
             {

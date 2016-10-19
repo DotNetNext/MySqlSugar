@@ -200,7 +200,7 @@ namespace MySqlSugar
             {
                 var isLog = db.IsEnableLogEvent;
                 db.IsEnableLogEvent = false;
-                string sql = " SELECT Name FROM SysColumns WHERE id=Object_Id('" + tableName + "')";
+                string sql = " SHOW columns FROM "+tableName.GetTranslationSqlName();
                 var reval = db.SqlQuery<string>(sql);
                 db.IsEnableLogEvent = isLog;
                 cm.Add(key, reval, cm.Day);
