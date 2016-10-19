@@ -46,7 +46,7 @@ namespace MySqlSugar
                 throw new SqlSugarException("Select 解析失败 ", new { selectString = reval.SelectValue });
             }
             reval.SelectValue = reval.SelectValue.Replace("\"", "'");
-            reval.SelectValue = reval.SelectValue.Replace("DateTime.Now", "GETDATE()");
+            reval.SelectValue = reval.SelectValue.Replace("DateTime.Now", "now()");
             reval.SelectValue = ConvertFuns(reval.SelectValue, false);
             if (reval.DB != null && reval.DB.IsEnableAttributeMapping && reval.DB._mappingColumns.IsValuable())
             {
@@ -122,7 +122,7 @@ namespace MySqlSugar
                 throw new SqlSugarException("Select 解析失败 ", new { selectString = reval.SelectValue });
             }
             expStr = expStr.Replace("\"", "'");
-            expStr = expStr.Replace("DateTime.Now", "GETDATE()");
+            expStr = expStr.Replace("DateTime.Now", "now()");
             expStr = ConvertFuns(expStr);
             reval.SelectValue = expStr;
             if (reval.DB != null && reval.DB.IsEnableAttributeMapping && reval.DB._mappingColumns.IsValuable())

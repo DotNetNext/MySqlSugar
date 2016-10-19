@@ -380,7 +380,7 @@ namespace MySqlSugar
         {
             if (queryable.OrderByValue.IsNullOrEmpty())
             {
-                queryable.OrderByValue = "GETDATE()";
+                queryable.OrderByValue = "now()";
             }
             queryable.Skip(0);
             queryable.Take(1);
@@ -397,7 +397,7 @@ namespace MySqlSugar
         {
             if (queryable.OrderByValue.IsNullOrEmpty())
             {
-                queryable.OrderByValue = "GETDATE()";
+                queryable.OrderByValue = "now()";
             }
             queryable.Skip(0);
             queryable.Take(1);
@@ -455,7 +455,7 @@ namespace MySqlSugar
         {
             if (queryable.OrderByValue.IsNullOrEmpty())
             {
-                queryable.OrderByValue = "GETDATE()";
+                queryable.OrderByValue = "now()";
             }
             queryable.Skip(0);
             queryable.Take(1);
@@ -473,7 +473,7 @@ namespace MySqlSugar
         {
             if (queryable.OrderByValue.IsNullOrEmpty())
             {
-                queryable.OrderByValue = "GETDATE()";
+                queryable.OrderByValue = "now()";
             }
             queryable.Skip(0);
             queryable.Take(1);
