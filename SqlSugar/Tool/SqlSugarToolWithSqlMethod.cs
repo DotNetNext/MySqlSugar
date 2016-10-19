@@ -236,11 +236,14 @@ namespace MySqlSugar
             string sql = @"SELECT
                                     TABLE_NAME, 
                                     column_name AS COLUMN_NAME,
-                                    is_nullable AS `IS_NULLABLE`,
                                     column_default  AS  `COLUMN_DEFAULT`,
-                                    column_comment  AS  `COLUMN_DESCRIPTION`
+                                    column_comment  AS  `COLUMN_DESCRIPTION`,
+                                    CASE WHEN COLUMN_KEY = 'PRI'
+                                    THEN 1 ELSE 0 END AS `IS_PRIMARYKEY`,
+                                    CASE WHEN is_nullable = 'YES'
+                                    THEN 1 ELSE 0 END AS `IS_NULLABLE`
                                     FROM
-                                    Information_schema.columns where TABLE_NAME='"+tableName+@"' ORDER BY TABLE_NAME
+                                    Information_schema.columns where TABLE_NAME='" + tableName+@"' ORDER BY TABLE_NAME
                                       ";
             return sql;
         }

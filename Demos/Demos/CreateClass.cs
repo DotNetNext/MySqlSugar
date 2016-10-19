@@ -49,7 +49,7 @@ namespace NewTest.Demos
                 var dynamicToClassStr = db.ClassGenerating.DynamicToClass(new { id = 1 }, "dyName");
 
                 //根据SQL语句生成class字符串
-                var str2 = db.ClassGenerating.SqlToClass(db, "select top 1 * from Student", "student");
+                var str2 = db.ClassGenerating.SqlToClass(db, "select  * from Student limit 0,1", "student");
 
                 //改变值（lassTemplate.ItemTemplate=XXXX）可以自定义格式
                 var tempItem = ClassTemplate.ItemTemplate;//例如可以在生成的实体添加默认构造函数给指定的字段赋默认值或者公司信息等
