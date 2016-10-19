@@ -9,7 +9,7 @@ using System.Threading;
 using System.Web.UI.WebControls;
 #endregion
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：文件公共类

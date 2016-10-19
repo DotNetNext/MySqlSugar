@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：验证失败，则抛出异常

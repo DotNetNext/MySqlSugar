@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
 
     /// <summary>

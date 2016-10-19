@@ -5,7 +5,7 @@ using System.Text;
 using MySql.Data.MySqlClient;
 using System.Linq.Expressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
 
     /// <summary>

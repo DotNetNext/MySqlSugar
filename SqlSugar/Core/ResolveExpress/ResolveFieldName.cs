@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     //局部类 解析字段名
     internal partial class ResolveExpress

@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：SqlSugar工具类

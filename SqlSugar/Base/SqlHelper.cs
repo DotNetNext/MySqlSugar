@@ -5,7 +5,7 @@ using System.Text;
 using MySql.Data.MySqlClient;
 using System.Data;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：底层SQL辅助函数

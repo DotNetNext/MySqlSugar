@@ -9,7 +9,7 @@ using System.Web.Configuration;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：Json转换类

@@ -6,7 +6,7 @@ using System.Data;
 using System.Web;
 using MySql.Data.MySqlClient;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// SqlSugarTool局部类与Core有差异的部分(方便工具移植到.NetCore版本)

@@ -8,7 +8,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：SQL糖 ORM 核心类

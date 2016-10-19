@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：Sqlable扩展函数

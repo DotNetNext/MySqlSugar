@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections;
 using System.Linq.Expressions;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：缓存操作类

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     ///<summary>
     /// ** 描述：SqlSugar扩展工具类

@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
 
     /// <summary>

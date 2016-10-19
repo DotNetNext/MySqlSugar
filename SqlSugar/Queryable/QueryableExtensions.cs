@@ -8,7 +8,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Collections;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     /// <summary>
     /// ** 描述：Queryable扩展函数

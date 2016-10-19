@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq.Expressions;
 using System.Collections;
 
-namespace SqlSugar
+namespace MySqlSugar
 {
     //局部类：解析函数
     internal partial class ResolveExpress
