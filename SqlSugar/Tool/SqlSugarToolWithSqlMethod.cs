@@ -41,62 +41,25 @@ namespace MySqlSugar
             }
             if (queryable.DB.PageModel == PageModel.RowNumber)
             {
-                #region  rowNumber
-                string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
-                var order = queryable.OrderByValue.IsValuable() ? (",row_index=ROW_NUMBER() OVER(ORDER BY " + queryable.OrderByValue + " )") : null;
-
-                sbSql.AppendFormat("SELECT " + queryable.SelectValue.GetSelectFiles() + " {1} FROM {0} {5} {2} WHERE 1=1 {3} {4} ", tableName.GetTranslationSqlName(), order, withNoLock, string.Join("", queryable.WhereValue), queryable.GroupByValue.GetGroupBy(), joinInfo);
-                if (queryable.Skip == null && queryable.Take != null)
-                {
-                    if (joinInfo.IsValuable())
-                    {
-                        sbSql.Insert(0, "SELECT * FROM ( ");
-                    }
-                    else
-                    {
-                        sbSql.Insert(0, "SELECT " + queryable.SelectValue.GetSelectFiles() + " FROM ( ");
-                    }
-                    sbSql.Append(") t WHERE t.row_index<=" + queryable.Take);
-                }
-                else if (queryable.Skip != null && queryable.Take == null)
-                {
-                    if (joinInfo.IsValuable())
-                    {
-                        sbSql.Insert(0, "SELECT * FROM ( ");
-                    }
-                    else
-                    {
-                        sbSql.Insert(0, "SELECT " + queryable.SelectValue.GetSelectFiles() + " FROM ( ");
-                    }
-                    sbSql.Append(") t WHERE t.row_index>" + (queryable.Skip));
-                }
-                else if (queryable.Skip != null && queryable.Take != null)
-                {
-                    if (joinInfo.IsValuable())
-                    {
-                        sbSql.Insert(0, "SELECT * FROM ( ");
-                    }
-                    else
-                    {
-                        sbSql.Insert(0, "SELECT " + queryable.SelectValue.GetSelectFiles() + " FROM ( ");
-                    }
-                    sbSql.Append(") t WHERE t.row_index BETWEEN " + (queryable.Skip + 1) + " AND " + (queryable.Skip + queryable.Take));
-                }
-                #endregion
-            }
-            else
-            {
-
-                #region offset
                 string withNoLock = queryable.DB.IsNoLock ? "WITH(NOLOCK)" : null;
                 var order = queryable.OrderByValue.IsValuable() ? ("ORDER BY " + queryable.OrderByValue + " ") : null;
-                sbSql.AppendFormat("SELECT " + queryable.SelectValue.GetSelectFiles() + " {1} FROM {0} {5} {2} WHERE 1=1 {3} {4} ", tableName.GetTranslationSqlName(), "", withNoLock, string.Join("", queryable.WhereValue), queryable.GroupByValue.GetGroupBy(), joinInfo);
+                sbSql.AppendFormat("SELECT " + queryable.SelectValue.GetSelectFiles() + " {1} FROM {0} {5} {2} WHERE 1=1 {3} {4} ", tableName.GetTranslationSqlName(), "", withNoLock, string.Join("", queryable.WhereValue), queryable.GroupByValue.GetGroupBy(),joinInfo);
                 sbSql.Append(order);
-                if (queryable.Skip != null || queryable.Take != null)
+                if (queryable.Skip > 0 || queryable.Take > 0)
                 {
-                    sbSql.AppendFormat("OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY", Convert.ToInt32(queryable.Skip), Convert.ToInt32(queryable.Take));
+                    if (queryable.Skip > 0 && queryable.Take > 0)
+                    {
+                        sbSql.AppendFormat("limit {0},{1}", queryable.Skip, queryable.Take);
+                    }
+                    else if (queryable.Skip > 0)
+                    {
+                        sbSql.AppendFormat("limit {0}", queryable.Skip);
+                    }
+                    else if (queryable.Take > 0)
+                    {
+                        sbSql.AppendFormat("limit 0,{0}", queryable.Take);
+                    }
                 }
-                #endregion
             }
             return sbSql;
         }
