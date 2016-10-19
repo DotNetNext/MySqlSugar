@@ -6,7 +6,7 @@ using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：DataReader实体生成
@@ -17,11 +17,13 @@ namespace MySqlSugar
     /// </summary>
     public class IDataReaderEntityBuilder<T>
     {
-
+        //is db null method
         private static readonly MethodInfo isDBNullMethod = typeof(IDataRecord).GetMethod("IsDBNull", new Type[] { typeof(int) });
+
 
         //default method
         private static readonly MethodInfo getValueMethod = typeof(IDataRecord).GetMethod("get_Item", new Type[] { typeof(int) });
+
 
         //dr valueType method
         private static readonly MethodInfo getBoolean = typeof(IDataRecord).GetMethod("GetBoolean", new Type[] { typeof(int) });
@@ -37,8 +39,8 @@ namespace MySqlSugar
         private static readonly MethodInfo getString = typeof(IDataRecord).GetMethod("GetString", new Type[] { typeof(int) });
 
 
-
         //convert method
+        private static readonly MethodInfo getConvertFloat = typeof(IDataRecordExtensions).GetMethod("GetConvertFloat");
         private static readonly MethodInfo getConvertBoolean = typeof(IDataRecordExtensions).GetMethod("GetConvertBoolean");
         private static readonly MethodInfo getConvertByte = typeof(IDataRecordExtensions).GetMethod("GetConvertByte");
         private static readonly MethodInfo getConvertChar = typeof(IDataRecordExtensions).GetMethod("GetConvertChar");
@@ -48,26 +50,43 @@ namespace MySqlSugar
         private static readonly MethodInfo getConvertGuid = typeof(IDataRecordExtensions).GetMethod("GetConvertGuid");
         private static readonly MethodInfo getConvertInt16 = typeof(IDataRecordExtensions).GetMethod("GetConvertInt16");
         private static readonly MethodInfo getConvertInt32 = typeof(IDataRecordExtensions).GetMethod("GetConvertInt32");
-        private static readonly MethodInfo getConvetInt64 = typeof(IDataRecordExtensions).GetMethod("getConvetInt64");
+        private static readonly MethodInfo getConvetInt64 = typeof(IDataRecordExtensions).GetMethod("GetConvetInt64");
         private static readonly MethodInfo getConvertToEnum_Nullable = typeof(IDataRecordExtensions).GetMethod("GetConvertEnum_Nullable");
         private static readonly MethodInfo getOtherNull = typeof(IDataRecordExtensions).GetMethod("GetOtherNull");
         private static readonly MethodInfo getOther = typeof(IDataRecordExtensions).GetMethod("GetOther");
 
 
 
-
+        /// <summary>
+        /// 声名委托类型
+        /// </summary>
+        /// <param name="dataRecord"></param>
+        /// <returns></returns>
         private delegate T Load(IDataRecord dataRecord);
 
+        /// <summary>
+        /// 声名事件，当执行CreateBuilder后，EMIT将动态创建最高性能的实体绑定对象
+        /// </summary>
         private Load handler;
 
+        /// <summary>
+        /// 将dataRecord的值绑定到T
+        /// </summary>
+        /// <param name="dataRecord"></param>
+        /// <returns></returns>
         public T Build(IDataRecord dataRecord)
         {
             return handler(dataRecord);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dataRecord"></param>
+        /// <returns></returns>
         public static IDataReaderEntityBuilder<T> CreateBuilder(Type type, IDataRecord dataRecord)
         {
-
-            {
                 IDataReaderEntityBuilder<T> dynamicBuilder = new IDataReaderEntityBuilder<T>();
                 DynamicMethod method = new DynamicMethod("DynamicCreateEntity", type,
                         new Type[] { typeof(IDataRecord) }, type, true);
@@ -75,15 +94,26 @@ namespace MySqlSugar
                 LocalBuilder result = generator.DeclareLocal(type);
                 generator.Emit(OpCodes.Newobj, type.GetConstructor(Type.EmptyTypes));
                 generator.Emit(OpCodes.Stloc, result);
+                string cacheKey = "SqlSugarClient.InitAttributes";
+                var cm = CacheManager<List<KeyValue>>.GetInstance();
+                var tFieldNames = typeof(T).GetProperties().Select(it => it.Name).ToList();
                 for (int i = 0; i < dataRecord.FieldCount; i++)
                 {
-                    string fieldName = dataRecord.GetName(i);
-                    PropertyInfo propertyInfo = type.GetProperty(fieldName);
+                    string dbFieldName = dataRecord.GetName(i);
+                    if (cm.ContainsKey(cacheKey) && cm[cacheKey].Any(it => it.Value == dbFieldName))
+                    {
+                        var classFieldName= cm[cacheKey].Single(it => it.Value == dbFieldName).Key;
+                        if (tFieldNames.Any(it => it == classFieldName))//T包含映射属性
+                        {
+                            dbFieldName = classFieldName;
+                        }
+                    }
+                    PropertyInfo propertyInfo = type.GetProperty(dbFieldName);
                     Label endIfLabel = generator.DefineLabel();
                     if (propertyInfo != null && propertyInfo.GetSetMethod() != null)
                     {
                         bool isNullable = false;
-                        var underType = GetUnderType(propertyInfo, ref isNullable);
+                        var underType = SqlSugarTool.GetUnderType(propertyInfo, ref isNullable);
 
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Ldc_I4, i);
@@ -92,7 +122,7 @@ namespace MySqlSugar
                         generator.Emit(OpCodes.Ldloc, result);
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Ldc_I4, i);
-                        GeneratorCallMethod(generator, underType, isNullable, propertyInfo, dataRecord.GetDataTypeName(i), fieldName);
+                        GeneratorCallMethod(generator, underType, isNullable, propertyInfo, dataRecord.GetDataTypeName(i), dbFieldName);
                         generator.Emit(OpCodes.Callvirt, propertyInfo.GetSetMethod());
                         generator.MarkLabel(endIfLabel);
                     }
@@ -101,7 +131,6 @@ namespace MySqlSugar
                 generator.Emit(OpCodes.Ret);
                 dynamicBuilder.handler = (Load)method.CreateDelegate(typeof(Load));
                 return dynamicBuilder;
-            }
         }
 
 
@@ -110,7 +139,7 @@ namespace MySqlSugar
             var isAny = errorTypes.Contains(objType);
             if (isAny)
             {
-                throw new Exception(string.Format("{0} can't  convert {1} to {2}", field, dbType, objType));
+                throw new SqlSugarException(string.Format("{0} can't  convert {1} to {2}", field, dbType, objType));
             }
         }
 
@@ -119,7 +148,11 @@ namespace MySqlSugar
         /// 动态获取IDataRecord里面的函数
         /// </summary>
         /// <param name="generator"></param>
+        /// <param name="type"></param>
+        /// <param name="isNullable"></param>
         /// <param name="pro"></param>
+        /// <param name="dbTypeName"></param>
+        /// <param name="fieldName"></param>
         private static void GeneratorCallMethod(ILGenerator generator, Type type, bool isNullable, PropertyInfo pro, string dbTypeName, string fieldName)
         {
             List<string> guidThrow = new List<string>() { "int32", "datetime", "decimal", "double", "byte", "string" };//数据库为GUID有错的实体类形
@@ -129,15 +162,16 @@ namespace MySqlSugar
             List<string> doubleThrow = new List<string>() { "datetime", "byte", "guid" };
             List<string> dateThrow = new List<string>() { "int32", "decimal", "double", "byte", "guid" };
             List<string> shortThrow = new List<string>() { "datetime", "guid" };
+            List<string> byteThrow = new List<string>() { "datetime", "guid" };
             MethodInfo method = null;
-            var typeName = ChangeDBTypeToCSharpType(dbTypeName);
+            var typeName = SqlSugarTool.ChangeDBTypeToCSharpType(dbTypeName);
             var objTypeName = type.Name.ToLower();
             var isEnum = type.IsEnum;
             if (isEnum)
             {
                 typeName = "ENUMNAME";
             }
-            else if (typeName.IsIn("byte[]", "other"))
+            else if (dbTypeName.Contains("hierarchyid") || typeName == "byte[]" || objTypeName == "object")
             {
                 generator.Emit(OpCodes.Call, getValueMethod);
                 generator.Emit(OpCodes.Unbox_Any, pro.PropertyType);//找不到类型才执行拆箱（类型转换）
@@ -154,6 +188,13 @@ namespace MySqlSugar
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertInt32; break;
+                    case "long":
+                        CheckType(intThrow, objTypeName, typeName, fieldName);
+                        var isNotLong = objTypeName != "int64";
+                        if (isNotLong)
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvetInt64; break;
                     case "bool":
                         if (objTypeName != "bool" && objTypeName != "boolean")
                             method = getOtherNull.MakeGenericMethod(type);
@@ -182,6 +223,12 @@ namespace MySqlSugar
                             method = getOtherNull.MakeGenericMethod(type);
                         else
                             method = getConvertDouble; break;
+                    case "float":
+                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "float" && objTypeName != "single")
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertFloat; break;
                     case "guid":
                         CheckType(guidThrow, objTypeName, typeName, fieldName);
                         if (objTypeName != "guid")
@@ -189,7 +236,11 @@ namespace MySqlSugar
                         else
                             method = getConvertGuid; break;
                     case "byte":
-                        method = getConvertByte; break;
+                        CheckType(byteThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "byte")
+                            method = getOtherNull.MakeGenericMethod(type);
+                        else
+                            method = getConvertByte; break;
                     case "ENUMNAME":
                         method = getConvertToEnum_Nullable.MakeGenericMethod(type); break;
                     case "short":
@@ -218,6 +269,13 @@ namespace MySqlSugar
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getInt32; break;
+                    case "long":
+                        CheckType(intThrow, objTypeName, typeName, fieldName);
+                        var isNotLong = objTypeName != "int64";
+                        if (isNotLong)
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getInt64; break;
                     case "bool":
                         if (objTypeName != "bool" && objTypeName != "boolean")
                             method = getOther.MakeGenericMethod(type);
@@ -246,6 +304,12 @@ namespace MySqlSugar
                             method = getOther.MakeGenericMethod(type);
                         else
                             method = getDouble; break;
+                    case "float":
+                        CheckType(decimalThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "float" && objTypeName != "single")
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getFloat; break;
                     case "guid":
                         CheckType(guidThrow, objTypeName, typeName, fieldName);
                         if (objTypeName != "guid")
@@ -253,7 +317,11 @@ namespace MySqlSugar
                         else
                             method = getGuid; break;
                     case "byte":
-                        method = getByte; break;
+                        CheckType(byteThrow, objTypeName, typeName, fieldName);
+                        if (objTypeName != "byte")
+                            method = getOther.MakeGenericMethod(type);
+                        else
+                            method = getByte; break;
                     case "ENUMNAME":
                         method = getValueMethod; break;
                     case "short":
@@ -264,7 +332,9 @@ namespace MySqlSugar
                         else
                             method = getInt16;
                         break;
-                    default: method = getOther.MakeGenericMethod(type); break; ;
+                    default:
+                        method = getOther.MakeGenericMethod(type);
+                        break; ;
 
                 }
 
@@ -278,112 +348,6 @@ namespace MySqlSugar
 
 
         }
-        /// <summary>
-        /// 将SqlType转成C#Type
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
-        public static string ChangeDBTypeToCSharpType(string typeName)
-        {
-            string reval = string.Empty;
-            switch (typeName.ToLower())
-            {
-                case "integer":
-                case "int":
-                    reval = "int";
-                    break;
-                case "text":
-                    reval = "string";
-                    break;
-                case "bigint":
-                    reval = "long";
-                    break;
-                case "binary":
-                    reval = "object";
-                    break;
-                case "bit":
-                    reval = "bool";
-                    break;
-                case "char":
-                    reval = "string";
-                    break;
-                case "time":
-                case "datetime":
-                    reval = "dateTime";
-                    break;
-                case "decimal":
-                    reval = "decimal";
-                    break;
-                case "double":
-                case "float":
-                    reval = "double";
-                    break;
-                case "image":
-                    reval = "byte[]";
-                    break;
-                case "money":
-                    reval = "decimal";
-                    break;
-                case "nchar":
-                    reval = "string";
-                    break;
-                case "ntext":
-                    reval = "string";
-                    break;
-                case "numeric":
-                    reval = "decimal";
-                    break;
-                case "nvarchar":
-                    reval = "string";
-                    break;
-                case "real":
-                    reval = "float";
-                    break;
-                case "smalldatetime":
-                    reval = "dateTime";
-                    break;
-                case "smallint":
-                    reval = "short";
-                    break;
-                case "smallmoney":
-                    reval = "decimal";
-                    break;
-                case "timestamp":
-                    reval = "dateTime";
-                    break;
-                case "tinyint":
-                    reval = "byte";
-                    break;
-                case "uniqueidentifier":
-                    reval = "guid";
-                    break;
-                case "varbinary":
-                    reval = "byte[]";
-                    break;
-                case "varchar":
-                    reval = "string";
-                    break;
-                case "Variant":
-                    reval = "object";
-                    break;
-                default:
-                    reval = "other";
-                    break;
-            }
-            return reval;
-        }
-        /// <summary>
-        /// 获取最底层类型
-        /// </summary>
-        /// <param name="propertyInfo"></param>
-        /// <param name="isNullable"></param>
-        /// <returns></returns>
-        private static Type GetUnderType(PropertyInfo propertyInfo, ref bool isNullable)
-        {
-            Type unType = Nullable.GetUnderlyingType(propertyInfo.PropertyType);
-            isNullable = unType != null;
-            unType = unType ?? propertyInfo.PropertyType;
-            return unType;
-        }
+  
     }
 }

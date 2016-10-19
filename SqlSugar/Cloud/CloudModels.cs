@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace MySqlSugar
         public object WhereObj { get; set; }
         public string SymbolReverse { get; set; }
         public int ConfigCount { get; set; }
-        public OrderByType OrderByTypeReverse { get; set; }
+        public SqlSugar.OrderByType OrderByTypeReverse { get; set; }
     }
 
     internal class PageRowInnerParamsResultMultipleOrderBy
@@ -145,10 +145,22 @@ namespace MySqlSugar
         public int SampleEachIndex { get; set; }
     }
 
+    /// <summary>
+    /// 字典排序类
+    /// </summary>
     public class OrderByDictionary
     {
+        /// <summary>
+        /// 排序字段
+        /// </summary>
         public string OrderByField { get; set; }
+        /// <summary>
+        /// 排序类型
+        /// </summary>
         public OrderByType OrderByType { get; set; }
+        /// <summary>
+        /// 排序字符串
+        /// </summary>
         public string OrderByString
         {
             get
@@ -156,6 +168,9 @@ namespace MySqlSugar
                 return string.Format(" {0} {1} ", OrderByField, OrderByType.ToString());
             }
         }
+        /// <summary>
+        /// 排序字符返转
+        /// </summary>
         public string OrderByStringReverse
         {
             get
@@ -163,6 +178,9 @@ namespace MySqlSugar
                 return string.Format(" {0} {1} ", OrderByField, OrderByTypeReverse.ToString());
             }
         }
+        /// <summary>
+        /// 排序字符返转
+        /// </summary>
         public OrderByType OrderByTypeReverse
         {
             get
@@ -170,6 +188,9 @@ namespace MySqlSugar
                 return IsAsc ? OrderByType.desc : OrderByType.asc;
             }
         }
+        /// <summary>
+        /// 是升序
+        /// </summary>
         public bool IsAsc
         {
             get
@@ -177,6 +198,9 @@ namespace MySqlSugar
                 return OrderByType == OrderByType.asc;
             }
         }
+        /// <summary>
+        /// 比较符
+        /// </summary>
         public string Symbol
         {
             get
@@ -184,6 +208,9 @@ namespace MySqlSugar
                 return IsAsc ? "<" : ">";
             }
         }
+        /// <summary>
+        /// 比较符反转
+        /// </summary>
         public string SymbolReverse
         {
             get

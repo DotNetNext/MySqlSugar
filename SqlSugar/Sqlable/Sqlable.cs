@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：Queryable是多表查询基类，基于拥有大量查询扩展函数
@@ -38,6 +38,6 @@ namespace MySqlSugar
         /// <summary>
         /// 参数
         /// </summary>
-        public List<MySqlParameter> Params = new List<MySqlParameter>();
+        public List<SqlParameter> Params = new List<SqlParameter>();
     }
 }

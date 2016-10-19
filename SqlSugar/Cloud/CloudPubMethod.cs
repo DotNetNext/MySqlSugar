@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
 
     internal class CloudPubMethod
@@ -84,6 +84,7 @@ namespace MySqlSugar
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="configCount"></param>
+        /// <param name="maxHandleNumber"></param>
         /// <returns></returns>
         public static bool GetIsSmallPageIndex(int pageIndex, int pageSize, int configCount, int maxHandleNumber)
         {
@@ -97,9 +98,11 @@ namespace MySqlSugar
         /// <summary>
         /// 倒数分页索引是否很小
         /// </summary>
+        /// <param name="totalPage"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="configCount"></param>
+        /// <param name="maxHandleNumber"></param>
         /// <returns></returns>
         public static bool GetIsSmallPageIndexByReverse(int totalPage, int pageIndex, int pageSize, int configCount, int maxHandleNumber)
         {

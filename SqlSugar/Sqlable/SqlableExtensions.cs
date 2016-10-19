@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：Sqlable扩展函数
@@ -20,26 +20,25 @@ namespace MySqlSugar
         /// Form
         /// </summary>
         /// <param name="sqlable"></param>
-        /// <param name="modelObj">表名</param>
+        /// <param name="tableName">表名</param>
         /// <param name="shortName">表名简写</param>
         /// <returns></returns>
-        public static Sqlable From(this Sqlable sqlable, object tableName, string shortName)
+        public static Sqlable From(this Sqlable sqlable, string tableName, string shortName)
         {
             sqlable.Sql = new StringBuilder();
-            sqlable.Sql.AppendFormat(" FROM {0} {1} {2} ", tableName, shortName, sqlable.DB.IsNoLock.GetLockString());
+            sqlable.Sql.AppendFormat(" FROM {0} {1} {2} ", tableName.GetTranslationSqlName(), shortName, sqlable.DB.IsNoLock.GetLockString());
             return sqlable;
         }
         /// <summary>
         /// Form
         /// </summary>
         /// <param name="sqlable"></param>
-        /// <param name="modelObj">表名</param>
         /// <param name="shortName">表名简写</param>
         /// <returns></returns>
         public static Sqlable From<T>(this Sqlable sqlable, string shortName)
         {
             sqlable.Sql = new StringBuilder();
-            sqlable.Sql.AppendFormat(" FROM {0} {1} {2} ", typeof(T).Name, shortName, sqlable.DB.IsNoLock.GetLockString());
+            sqlable.Sql.AppendFormat(" FROM {0} {1} {2} ", typeof(T).Name.GetTranslationSqlName(), shortName, sqlable.DB.IsNoLock.GetLockString());
             return sqlable;
         }
 
@@ -47,20 +46,23 @@ namespace MySqlSugar
         /// Join
         /// </summary>
         /// <param name="sqlable"></param>
+        /// <param name="tableName">表名字符串</param>
+        /// <param name="shortName">表名简写</param>
         /// <param name="leftFiled">join左边连接字段</param>
         /// <param name="RightFiled">join右边连接字段</param>
         /// <param name="type">join类型</param>
         /// <returns></returns>
-        public static Sqlable Join(this Sqlable sqlable, object tableName, string shortName, string leftFiled, string RightFiled, JoinType type)
+        public static Sqlable Join(this Sqlable sqlable, string tableName, string shortName, string leftFiled, string RightFiled, JoinType type)
         {
             Check.ArgumentNullException(sqlable.Sql, "语法错误，正确用法：sqlable.Form(“table”).Join");
-            sqlable.Sql.AppendFormat(" {0} JOIN {1} {2}  {3} ON  {4} = {5} ", type.ToString(), tableName, shortName, sqlable.DB.IsNoLock.GetLockString(), leftFiled, RightFiled);
+            sqlable.Sql.AppendFormat(" {0} JOIN {1} {2}  {3} ON  {4} = {5} ", type.ToString(), tableName.GetTranslationSqlName(), shortName, sqlable.DB.IsNoLock.GetLockString(), leftFiled, RightFiled);
             return sqlable;
         }
         /// <summary>
         /// Join
         /// </summary>
         /// <param name="sqlable"></param>
+        /// <param name="shortName">表名简写</param>
         /// <param name="leftFiled">join左边连接字段</param>
         /// <param name="RightFiled">join右边连接字段</param>
         /// <param name="type">join类型</param>
@@ -68,7 +70,7 @@ namespace MySqlSugar
         public static Sqlable Join<T>(this Sqlable sqlable, string shortName, string leftFiled, string RightFiled, JoinType type)
         {
             Check.ArgumentNullException(sqlable.Sql, "语法错误，正确用法：sqlable.Form(“table”).Join");
-            sqlable.Sql.AppendFormat(" {0} JOIN {1} {2}  {3} ON  {4} = {5} ", type.ToString(), typeof(T).Name, shortName, sqlable.DB.IsNoLock.GetLockString(), leftFiled, RightFiled);
+            sqlable.Sql.AppendFormat(" {0} JOIN {1} {2}  {3} ON  {4} = {5} ", type.ToString(), typeof(T).Name.GetTranslationSqlName(), shortName, sqlable.DB.IsNoLock.GetLockString(), leftFiled, RightFiled);
             return sqlable;
         }
 
@@ -133,6 +135,8 @@ namespace MySqlSugar
         /// <param name="sqlable"></param>
         /// <param name="fileds">查询列</param>
         /// <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
+        /// <param name="preSql">在这语句之前可插入自定义SQL</param>
+        /// <param name="nextSql">在这语句之后可以插自定义SQL</param>
         /// <returns></returns>
         public static List<T> SelectToList<T>(this Sqlable sqlable, string fileds, object whereObj = null, string preSql = null, string nextSql = null) where T : class
         {
@@ -174,9 +178,9 @@ namespace MySqlSugar
         /// <param name="sqlable"></param>
         /// <param name="whereObj"></param>
         /// <returns></returns>
-        private static MySqlParameter[] GetAllParas(Sqlable sqlable, object whereObj)
+        private static SqlParameter[] GetAllParas(Sqlable sqlable, object whereObj)
         {
-            List<MySqlParameter> allParams = new List<MySqlParameter>();
+            List<SqlParameter> allParams = new List<SqlParameter>();
             var selectParas = SqlSugarTool.GetParameters(whereObj).ToList();
             if (selectParas.IsValuable())
             {
@@ -238,7 +242,6 @@ namespace MySqlSugar
         /// <summary>
         /// 设置查询列执行查询，并且将结果集转成dynamic
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="sqlable"></param>
         /// <param name="fileds">查询列</param>
         /// <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
@@ -251,7 +254,6 @@ namespace MySqlSugar
         /// <summary>
         /// 生成查询结果对应的实体类字符串
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="sqlable"></param>
         /// <param name="fileds">查询列</param>
         /// <param name="whereObj">SQL参数,例如:new{id=1,name="张三"}</param>
@@ -267,6 +269,9 @@ namespace MySqlSugar
         /// 反回记录数
         /// </summary>
         /// <param name="sqlable"></param>
+        /// <param name="whereObj">匿名参数 (例如：new{id=1,name="张三"})</param>
+        /// <param name="preSql">在这语句之前可插入自定义SQL</param>
+        /// <param name="nextSql">在这语句之后可以插自定义SQL</param>
         /// <returns></returns>
         public static int Count(this Sqlable sqlable, object whereObj = null, string preSql = null, string nextSql = null)
         {
@@ -342,7 +347,6 @@ namespace MySqlSugar
         /// <summary>
         /// 设置查询列和分页参数执行查询，并且将结果集转成DataTable
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="sqlable"></param>
         /// <param name="fileds">查询列</param>
         /// <param name="orderByFiled">Order By字段，可以多个</param>

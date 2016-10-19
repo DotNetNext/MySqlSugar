@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections;
 using System.Linq.Expressions;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：缓存操作类
@@ -14,9 +14,8 @@ namespace MySqlSugar
     /// ** 作者：sunkaixuan
     /// ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4563462.html
     /// </summary>
-    /// <typeparam name="K">键</typeparam>
-    /// <typeparam name="V">值</typeparam>
-    internal class CacheManager<V> : IHttpStorageObject<V>
+    /// <typeparam name="V">值类型</typeparam>
+    internal class CacheManager<V> : IStorageObject<V>
     {
 
         readonly System.Collections.Concurrent.ConcurrentDictionary<string, V> InstanceCache = new System.Collections.Concurrent.ConcurrentDictionary<string, V>();
@@ -67,7 +66,10 @@ namespace MySqlSugar
         /// <returns></returns>         
         public override V Get(string key)
         {
-            return this.InstanceCache[key];
+            if (this.ContainsKey(key))
+                return this.InstanceCache[key];
+            else
+                return default(V);
         }
 
         /// <summary>         
@@ -153,9 +155,9 @@ namespace MySqlSugar
         }
 
         /// <summary>
-        /// 清除所有包含关键字的缓存
+        /// 清除所有缓存
         /// </summary>
-        /// <param name="removeKey">关键字</param>
+        /// <param name="removeExpression">表达式条件</param>
         public override void RemoveAll(Func<string, bool> removeExpression)
         {
             //throw new NotImplementedException();

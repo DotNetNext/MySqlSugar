@@ -9,10 +9,14 @@ using System.Web.Configuration;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
-    /// 作者热心的：dukang
+    /// ** 描述：Json转换类
+    /// ** 创始时间：2010-2-28
+    /// ** 修改时间：-
+    /// ** 作者：热心的dakang
+    /// ** 使用说明：
     /// </summary>
     public class JsonConverter
     {
@@ -39,7 +43,13 @@ namespace MySqlSugar
             }
             return jsSerializer.Serialize(parentRow);
         }
-
+        /// <summary>
+        /// dataTable转成JSON
+        ///  add sunkaixuan 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="dateFormat">设置序列化的时间格式</param>
+        /// <returns></returns>
         public static string DataTableToJson(DataTable table, string dateFormat)
         {
             var reval = DataTableToJson(table);
@@ -215,7 +225,7 @@ namespace MySqlSugar
         /// Datatable转换为Json   
         /// add dukang by 2016-05-19
         /// </summary>   
-        /// <param name="table">Datatable对象</param>   
+        /// <param name="dt">Datatable对象</param>   
         /// <returns>Json字符串</returns>   
         public static string ToJson(DataTable dt)
         {
@@ -337,11 +347,21 @@ namespace MySqlSugar
     {
         private IDictionary<string, object> Dictionary { get; set; }
 
+        /// <summary>
+        /// 动态JSON解析
+        /// </summary>
+        /// <param name="dictionary"></param>
         public DynamicJsonObject(IDictionary<string, object> dictionary)
         {
             this.Dictionary = dictionary;
         }
 
+        /// <summary>
+        /// TryGetMember
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result)
         {
             result = this.Dictionary[binder.Name];
@@ -368,6 +388,13 @@ namespace MySqlSugar
     /// </summary>
     public class DynamicJsonConverter : JavaScriptConverter
     {
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="type"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
         {
             if (dictionary == null)
@@ -381,11 +408,20 @@ namespace MySqlSugar
             return null;
         }
 
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 支持的类型
+        /// </summary>
         public override IEnumerable<Type> SupportedTypes
         {
             get { return new System.Collections.ObjectModel.ReadOnlyCollection<Type>(new List<Type>(new Type[] { typeof(object) })); }

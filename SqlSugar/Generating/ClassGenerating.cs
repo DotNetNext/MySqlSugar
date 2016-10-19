@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：实体生成类
@@ -28,11 +28,14 @@ namespace MySqlSugar
         /// <returns></returns>
         public string DynamicToClass(object entity, string className)
         {
-            StringBuilder reval = new StringBuilder();
             StringBuilder propertiesValue = new StringBuilder();
             var propertiesObj = entity.GetType().GetProperties();
             string replaceGuid = Guid.NewGuid().ToString();
             string nullable = string.Empty;
+            var classTemplate = ClassTemplate.Template;
+            string _ns = "";
+            string _foreach = "";
+            string _className = className;
             foreach (var r in propertiesObj)
             {
 
@@ -46,33 +49,35 @@ namespace MySqlSugar
                 {
                     propertiesValue.AppendLine();
                     string typeName = ChangeType(type);
-                    propertiesValue.AppendFormat("public {0}{3} {1} {2}", typeName, r.Name, "{get;set;}", nullable);
+                    propertiesValue.AppendFormat(ClassTemplate.ItemTemplate, typeName, r.Name, "{get;set;}", nullable);
                     propertiesValue.AppendLine();
                 }
             }
-
-            reval.AppendFormat(@"
-                 public class {0}{{
-                        {1}
-                 }}
-            ", className, propertiesValue);
-
-
-            return reval.ToString();
+            _foreach = propertiesValue.ToString();
+            classTemplate = ClassTemplate.Replace(classTemplate, _ns, _foreach, _className);
+            return classTemplate;
         }
 
 
         /// <summary>
         /// 根据DataTable获取实体类的字符串
         /// </summary>
-        /// <param name="sql"></param>
+        /// <param name="dt"></param>
         /// <param name="className"></param>
+        /// <param name="nameSpace"></param>
+        /// <param name="dataTableMapList"></param>
         /// <returns></returns>
         public string DataTableToClass(DataTable dt, string className, string nameSpace = null, List<PubModel.DataTableMap> dataTableMapList = null)
         {
             StringBuilder reval = new StringBuilder();
             StringBuilder propertiesValue = new StringBuilder();
             string replaceGuid = Guid.NewGuid().ToString();
+
+            var template = ClassTemplate.Template;
+            string _ns = nameSpace;
+            string _foreach = "";
+            string _className = className;
+            List<string> _primaryKeyName = new List<string>();
             foreach (DataColumn r in dt.Columns)
             {
                 propertiesValue.AppendLine();
@@ -85,39 +90,27 @@ namespace MySqlSugar
                     if (isAny)
                     {
                         columnInfo = dataTableMapList.First(it => it.COLUMN_NAME.ToString() == r.ColumnName);
-                        propertiesValue.AppendFormat(@"     /// <summary>
-     /// 说明:{0} 
-     /// 默认:{1} 
-     /// 可空:{2} 
-     /// </summary>
-",
-   columnInfo.COLUMN_DESCRIPTION.IsValuable() ? columnInfo.COLUMN_DESCRIPTION.ToString() : "-", //{0}
-   columnInfo.COLUMN_DEFAULT.IsValuable() ? columnInfo.COLUMN_DEFAULT.ToString() : "-", //{1}
-   Convert.ToBoolean(columnInfo.IS_NULLABLE));//{2}
+                        if (columnInfo.IS_PRIMARYKEY.ToString() == "1")
+                        {
+                            _primaryKeyName.Add(r.ColumnName);
+                        }
+                        propertiesValue.AppendFormat(ClassTemplate.ClassFieldSummaryTemplate,
+                        columnInfo.COLUMN_DESCRIPTION.IsValuable() ? columnInfo.COLUMN_DESCRIPTION.ToString() : "-", //{0}
+                        columnInfo.COLUMN_DEFAULT.IsValuable() ? columnInfo.COLUMN_DEFAULT.ToString() : "-", //{1}
+                        Convert.ToBoolean(columnInfo.IS_NULLABLE));//{2}
                     }
-
                 }
-                propertiesValue.AppendFormat("    public {0} {1} {2}", isAny ? ChangeNullable(typeName, Convert.ToBoolean(columnInfo.IS_NULLABLE)) : typeName, r.ColumnName, "{get;set;}");
+                propertiesValue.AppendFormat(
+                    ClassTemplate.ItemTemplate,
+                    isAny ? ChangeNullable(typeName, Convert.ToBoolean(columnInfo.IS_NULLABLE)) : typeName,
+                    r.ColumnName, "{get;set;}",
+                    "");
                 propertiesValue.AppendLine();
             }
+            _foreach = propertiesValue.ToString();
 
-            reval.AppendFormat(@"   public class {0}{{
-                        {1}
-   }}
-            ", className, propertiesValue);
-
-            if (nameSpace != null)
-            {
-                return string.Format(@"using System;
-namespace {1}
-{{
- {0}
-}}", reval.ToString(), nameSpace);
-            }
-            else
-            {
-                return reval.ToString();
-            }
+            template = ClassTemplate.Replace(template, _ns, _foreach, _className, _primaryKeyName);
+            return template;
         }
 
 
@@ -130,104 +123,97 @@ namespace {1}
         /// <returns></returns>
         public string SqlToClass(SqlSugarClient db, string sql, string className)
         {
-            using (MySqlConnection conn = new MySqlConnection(db.ConnectionString))
-            {
-                MySqlCommand command = new MySqlCommand();
-                command.Connection = conn;
-                command.CommandText = sql;
-                DataTable dt = new DataTable();
-                MySqlDataAdapter sad = new MySqlDataAdapter(command);
-                sad.Fill(dt);
-                var reval = DataTableToClass(dt, className);
-                return reval;
-            }
+            var dt = db.GetDataTable(sql);
+            var reval = DataTableToClass(dt, className);
+            return reval;
+
         }
+
         /// <summary>
         /// 根据表名获取实体类的字符串
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="sql"></param>
-        /// <param name="className"></param>
+        /// <param name="tableName">表名</param>
         /// <returns></returns>
         public string TableNameToClass(SqlSugarClient db, string tableName)
         {
-            var dt = db.GetDataTable(string.Format("select   * from {0} where 1<0", tableName));
-         
-            var reval = DataTableToClass(dt, tableName,null,null);
+            var dt = db.GetDataTable(string.Format(SqlSugarTool.GetSelectTopSql(), tableName.GetTranslationSqlName()));
+            var tableColumns = GetTableColumns(db, tableName);
+            var reval = DataTableToClass(dt, tableName, null, tableColumns);
             return reval;
         }
 
 
 
         /// <summary>
-        /// 创建SQL实体文件
+        /// 创建实体文件
         /// </summary>
         /// <param name="db"></param>
         /// <param name="fileDirectory"></param>
-        /// <param name="nameSpace">命名空间（默认：null）</param>
+        /// <param name="nameSpace">命名空间（默认：system）</param>
         /// <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
-        public void CreateClassFiles(SqlSugarClient db, string fileDirectory, string nameSpace = null, bool? tableOrView = null, Action<string> callBack = null)
+        /// <param name="callBack">生成文件后的处理，参数string为实体名</param>
+        /// <param name="preAction">生成文件前的处理，参数string为表名</param>
+        public void CreateClassFiles(SqlSugarClient db, string fileDirectory, string nameSpace = null, bool? tableOrView = null, Action<string> callBack = null, Action<string> preAction = null)
         {
-            var tables = db.GetDataTable("show tables ");
-            if (tables != null && tables.Rows.Count > 0)
-            {
-                foreach (DataRow dr in tables.Rows)
-                {
-                    string tableName = dr[0].ToString();
-                    var currentTable = db.GetDataTable(string.Format("select  * from {0} limit 0,1", tableName));
-                    if (callBack != null)
-                    {
-                      
-                        var classCode = DataTableToClass(currentTable, tableName, nameSpace, null);
-                        string className = db.GetClassTypeByTableName(tableName);
-                        classCode = classCode.Replace("class " + tableName, "class " + className);
-                        FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + className + ".cs", classCode,Encoding.UTF8);
-                        callBack(className);
-                    }
-                    else
-                    {
-                    
-                        var classCode = DataTableToClass(currentTable, tableName, nameSpace,null);
-                        FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + tableName + ".cs", classCode,Encoding.UTF8);
-                    }
-                }
-            }
-        }
-
-
-
-        /// <summary>
-        /// 创建SQL实体文件
-        /// </summary>
-        /// <param name="db"></param>
-        /// <param name="fileDirectory"></param>
-        /// <param name="nameSpace">命名空间（默认：null）</param>
-        /// <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
-        public void CreateClassFilesInterface(SqlSugarClient db,bool? tableOrView , Action<DataTable,string,string> callBack)
-        {
-            var tables = db.GetDataTable("select name from sysobjects where xtype in ('U','V') ");
-            if (tableOrView != null)
-            {
-                if (tableOrView == true)
-                {
-                    tables = db.GetDataTable("select name from sysobjects where xtype in ('U') ");
-                }
-                else
-                {
-
-                    tables = db.GetDataTable("select name from sysobjects where xtype in ('V') ");
-                }
-            }
+            var isLog = db.IsEnableLogEvent;
+            db.IsEnableLogEvent = false;
+            string sql = SqlSugarTool.GetCreateClassSql(tableOrView);
+            var tables = db.GetDataTable(sql);
             if (tables != null && tables.Rows.Count > 0)
             {
                 foreach (DataRow dr in tables.Rows)
                 {
                     string tableName = dr["name"].ToString();
-                    var currentTable = db.GetDataTable(string.Format("select top 1 * from {0}", tableName));
-                    string className = db.GetClassTypeByTableName(tableName);
-                    callBack(tables, className,tableName);
+                    if (preAction != null)
+                    {
+                        preAction(tableName);
+                    }
+                    var currentTable = db.GetDataTable(string.Format(SqlSugarTool.GetSelectTopSql(), GetTableNameWithSchema(db,tableName).GetTranslationSqlName()));
+                    if (callBack != null)
+                    {
+                        var tableColumns = GetTableColumns(db, tableName);
+                        var classCode = DataTableToClass(currentTable, tableName, nameSpace, tableColumns);
+                        string className = db.GetClassTypeByTableName(tableName);
+                        classCode = classCode.Replace("class " + tableName, "class " + className);
+                        FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + className + ".cs", classCode, Encoding.UTF8);
+                        callBack(className);
+                    }
+                    else
+                    {
+                        var tableColumns = GetTableColumns(db, tableName);
+                        string className = db.GetClassTypeByTableName(tableName);
+                        var classCode = DataTableToClass(currentTable, className, nameSpace, tableColumns);
+                        FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + className + ".cs", classCode, Encoding.UTF8);
+                    }
                 }
             }
+            db.IsEnableLogEvent = isLog;
+        }
+
+        /// <summary>
+        /// 创建SQL实体文件
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="tableOrView">是生成视图文件还是表文件,null生成表和视图，true生成表，false生成视图(默认为：null)</param>
+        /// <param name="callBack">回调函数</param>
+        public void CreateClassFilesInterface(SqlSugarClient db, bool? tableOrView, Action<DataTable, string, string> callBack)
+        {
+            var isLog = db.IsEnableLogEvent;
+            db.IsEnableLogEvent = false;
+            string sql = SqlSugarTool.GetCreateClassSql(tableOrView);
+            var tables = db.GetDataTable(sql);
+            if (tables != null && tables.Rows.Count > 0)
+            {
+                foreach (DataRow dr in tables.Rows)
+                {
+                    string tableName = dr["name"].ToString();
+                    var currentTable = db.GetDataTable(string.Format(SqlSugarTool.GetSelectTopSql(),GetTableNameWithSchema(db,tableName).GetTranslationSqlName()));
+                    string className = db.GetClassTypeByTableName(tableName);
+                    callBack(tables, className, tableName);
+                }
+            }
+            db.IsEnableLogEvent = isLog;
         }
 
 
@@ -236,7 +222,14 @@ namespace {1}
         /// </summary>
         public void CreateClassFilesByTableNames(SqlSugarClient db, string fileDirectory, string nameSpace, params string[] tableNames)
         {
-            var tables = db.GetDataTable("select name from sysobjects where xtype in ('U','V') ");
+            var isLog = db.IsEnableLogEvent;
+            db.IsEnableLogEvent = false;
+            string sql = SqlSugarTool.GetCreateClassSql(null);
+            var tables = db.GetDataTable(sql);
+            if (!FileSugar.IsExistDirectory(fileDirectory))
+            {
+                FileSugar.CreateDirectory(fileDirectory);
+            }
             if (tables != null && tables.Rows.Count > 0)
             {
                 foreach (DataRow dr in tables.Rows)
@@ -244,12 +237,15 @@ namespace {1}
                     string tableName = dr["name"].ToString().ToLower();
                     if (tableNames.Any(it => it.ToLower() == tableName))
                     {
-                        var currentTable = db.GetDataTable(string.Format("select top 1 * from {0}", tableName));
-                        var classCode = DataTableToClass(currentTable, tableName, nameSpace);
-                        FileSugar.WriteText(fileDirectory.TrimEnd('\\') + "\\" + tableName + ".cs", classCode);
+                        var currentTable = db.GetDataTable(string.Format(SqlSugarTool.GetSelectTopSql(), GetTableNameWithSchema(db,tableName).GetTranslationSqlName()));
+                        var tableColumns = GetTableColumns(db, tableName);
+                        string className = db.GetClassTypeByTableName(tableName);
+                        var classCode = DataTableToClass(currentTable, className, nameSpace, tableColumns);
+                        FileSugar.CreateFile(fileDirectory.TrimEnd('\\') + "\\" + className + ".cs", classCode, Encoding.UTF8);
                     }
                 }
             }
+            db.IsEnableLogEvent = isLog;
         }
 
         /// <summary>
@@ -259,13 +255,16 @@ namespace {1}
         /// <returns></returns>
         public List<string> GetTableNames(SqlSugarClient db)
         {
-
-            var tableNameList = db.SqlQuery<string>("select name from sysobjects where xtype in ('U','V') ").ToList();
+            var isLog = db.IsEnableLogEvent;
+            db.IsEnableLogEvent = false;
+            string sql = SqlSugarTool.GetCreateClassSql(null);
+            var tableNameList = db.SqlQuery<string>(sql).ToList();
             for (int i = 0; i < tableNameList.Count; i++)
             {
                 var tableName = tableNameList[i];
                 tableNameList[i] = db.GetClassTypeByTableName(tableName);
             }
+            db.IsEnableLogEvent = isLog;
             return tableNameList;
         }
 
@@ -274,7 +273,7 @@ namespace {1}
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public string ChangeType(Type type)
+        private string ChangeType(Type type)
         {
             string typeName = type.Name;
             switch (typeName)
@@ -285,7 +284,7 @@ namespace {1}
             return typeName;
         }
 
-        public string ChangeNullable(string typeName, bool isNull)
+        private string ChangeNullable(string typeName, bool isNull)
         {
             if (isNull)
             {
@@ -296,79 +295,70 @@ namespace {1}
                     case "byte": typeName = "Byte?"; break;
                     case "boolean": typeName = "Boolean?"; break;
                     case "datetime": typeName = "DateTime?"; break;
+                    case "decimal": typeName = "decimal?"; break;
+                    case "guid": typeName = "Guid?"; break;
 
                 }
             }
             return typeName;
         }
 
-        public  string DbTypeToFieldType(string dbtype)
-        {
-            if (string.IsNullOrEmpty(dbtype)) return dbtype;
-            dbtype = dbtype.ToLower();
-            string csharpType = "object";
-            switch (dbtype)
-            {
-                case "bigint": csharpType = "long"; break;
-                case "binary": csharpType = "byte[]"; break;
-                case "bit": csharpType = "bool"; break;
-                case "char": csharpType = "string"; break;
-                case "date": csharpType = "DateTime"; break;
-                case "datetime": csharpType = "DateTime"; break;
-                case "datetime2": csharpType = "DateTime"; break;
-                case "datetimeoffset": csharpType = "DateTimeOffset"; break;
-                case "decimal": csharpType = "decimal"; break;
-                case "float": csharpType = "double"; break;
-                case "image": csharpType = "byte[]"; break;
-                case "int": csharpType = "int"; break;
-                case "money": csharpType = "decimal"; break;
-                case "nchar": csharpType = "string"; break;
-                case "ntext": csharpType = "string"; break;
-                case "numeric": csharpType = "decimal"; break;
-                case "nvarchar": csharpType = "string"; break;
-                case "real": csharpType = "Single"; break;
-                case "smalldatetime": csharpType = "DateTime"; break;
-                case "smallint": csharpType = "short"; break;
-                case "smallmoney": csharpType = "decimal"; break;
-                case "sql_variant": csharpType = "object"; break;
-                case "sysname": csharpType = "object"; break;
-                case "text": csharpType = "string"; break;
-                case "time": csharpType = "TimeSpan"; break;
-                case "timestamp": csharpType = "byte[]"; break;
-                case "tinyint": csharpType = "byte"; break;
-                case "uniqueidentifier": csharpType = "Guid"; break;
-                case "varbinary": csharpType = "byte[]"; break;
-                case "varchar": csharpType = "string"; break;
-                case "xml": csharpType = "string"; break;
-                default: csharpType = "object"; break;
-            }
-            return csharpType;
-        }
-        // 获取表结构信息
+        /// <summary>
+        /// 获取表结构信息
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public List<PubModel.DataTableMap> GetTableColumns(SqlSugarClient db, string tableName)
         {
-            string sql = @"SELECT  Sysobjects.name AS TABLE_NAME ,
-								syscolumns.Id  AS TABLE_ID,
-								syscolumns.name AS COLUMN_NAME ,
-								systypes.name AS DATA_TYPE ,
-								syscolumns.length AS CHARACTER_MAXIMUM_LENGTH ,
-								sys.extended_properties.[value] AS COLUMN_DESCRIPTION ,
-								syscomments.text AS COLUMN_DEFAULT ,
-								syscolumns.isnullable AS IS_NULLABLE
-								FROM    syscolumns
-								INNER JOIN systypes ON syscolumns.xtype = systypes.xtype
-								LEFT JOIN sysobjects ON syscolumns.id = sysobjects.id
-								LEFT OUTER JOIN sys.extended_properties ON ( sys.extended_properties.minor_id = syscolumns.colid
-																			 AND sys.extended_properties.major_id = syscolumns.id
-																		   )
-								LEFT OUTER JOIN syscomments ON syscolumns.cdefault = syscomments.id
-								WHERE   syscolumns.id IN ( SELECT   id
-												   FROM     SYSOBJECTS
-												   WHERE    xtype in( 'U','V') )
-								AND ( systypes.name <> 'sysname' ) AND Sysobjects.name='" + tableName + "'  AND systypes.name<>'geometry' AND systypes.name<>'geography'  ORDER BY syscolumns.colid";
-
+            string sql = SqlSugarTool.GetTtableColumnsInfo(tableName);
             return db.SqlQuery<PubModel.DataTableMap>(sql);
         }
-    }
 
+        /// <summary>
+        ///遍历表名和视图名
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="action">string为表名</param>
+        public void ForeachTables(SqlSugarClient db, Action<string> action)
+        {
+            Check.ArgumentNullException(action,"ForeachTables.action不能为null。");
+            string cacgeKey = "ClassGenerating.ForeachTables";
+            var cm = CacheManager<List<string>>.GetInstance();
+            List<string> tables = null;
+            if (cm.ContainsKey(cacgeKey))
+            {
+                tables = cm[cacgeKey];
+            }
+            else
+            {
+                tables = GetTableNames(db);
+            }
+            if (tables.IsValuable())
+            {
+                foreach (var item in tables)
+                {
+                    action(item);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 获取带schema的表名
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public string GetTableNameWithSchema(SqlSugarClient db,string tableName) {
+          
+            var list=SqlSugarTool.GetSchemaList(db).Where(it => it.Value == tableName).ToList();
+            if (list.Any()) {
+                Check.Exception(list.Count != 1,tableName+"不能同时存在两个Schema,请重命名表名。");
+                return string.Format("{0}.{1}",list.Single().Key,list.Single().Value);
+            }
+            return tableName;
+        }
+
+    }
 }

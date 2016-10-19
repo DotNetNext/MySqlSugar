@@ -9,7 +9,7 @@ using System.Threading;
 using System.Web.UI.WebControls;
 #endregion
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：文件公共类
@@ -52,7 +52,6 @@ namespace MySqlSugar
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="directory"></param>
-        /// <param name="code"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
         public string GetFiePathAndCreateDirectoryByDate<T>(string directory, string fileName)
@@ -361,6 +360,9 @@ namespace MySqlSugar
         {
             try
             {
+                if (IsExistFile(filePath)) {
+                    DeleteFile(filePath);
+                }
                 //如果文件不存在则创建该文件
                 if (!IsExistFile(filePath))
                 {
@@ -1062,8 +1064,8 @@ namespace MySqlSugar
         /// <summary>
         /// 根据路径得到文件流
         /// </summary>
-        /// <param name="strFilePath"></param>
-        /// <param name="strValue"></param>
+        /// <param name="Path"></param>
+        /// <returns></returns>
         public static byte[] GetFileSream(string Path)
         {
             byte[] buffer = null;

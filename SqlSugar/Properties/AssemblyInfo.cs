@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("作者:孙凯旋，蓝灯软件架构师")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("上海蓝灯软件有限公司")]
-[assembly: AssemblyProduct("MySqlSugar")]
+[assembly: AssemblyProduct("SqlSugar")]
 [assembly: AssemblyCopyright("Copyright © 上 海蓝灯软件有限公司 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“内部版本号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.1")]
-[assembly: AssemblyFileVersion("1.5.1")]
+[assembly: AssemblyVersion("3.1.0.9")]
+[assembly: AssemblyFileVersion("3.1.0.9")]

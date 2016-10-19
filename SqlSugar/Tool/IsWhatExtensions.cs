@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MySqlSugar
+namespace SqlSugar
 {
     /// <summary>
     /// ** 描述：逻辑判段是什么？
@@ -13,7 +13,7 @@ namespace MySqlSugar
     /// ** 作者：sunkaixuan
     /// ** 使用说明：http://www.cnblogs.com/sunkaixuan/p/4539654.html
     /// </summary>
-    internal static class IsWhatExtenions
+    internal static class IsWhatExtensions
     {
         /// <summary>
         /// 值在的范围？
@@ -50,13 +50,12 @@ namespace MySqlSugar
             return values.Contains(thisValue);
         }
 
-        /// <summary>
+       /// <summary>
         /// 在里面吗?
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="thisValue"></param>
-        /// <param name="values"></param>
-        /// <returns></returns>
+       /// </summary>
+       /// <param name="thisValue"></param>
+       /// <param name="inValues"></param>
+       /// <returns></returns>
         public static bool IsContainsIn(this string thisValue, params string[] inValues)
         {
             return inValues.Any(it => thisValue.Contains(it));
@@ -96,7 +95,7 @@ namespace MySqlSugar
         /// <returns></returns>
         public static bool IsValuable(this object thisValue)
         {
-            if (thisValue == null||thisValue==DBNull.Value) return false;
+            if (thisValue == null || thisValue == DBNull.Value) return false;
             return thisValue.ToString() != "";
         }
         /// <summary>
@@ -150,6 +149,18 @@ namespace MySqlSugar
             if (thisValue == null) return false;
             double outValue = 0;
             return double.TryParse(thisValue.ToString(), out outValue);
+        }
+
+        /// <summary>
+        /// 是GUID?
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsGuid(this object thisValue)
+        {
+            if (thisValue == null) return false;
+            Guid outValue = Guid.Empty;
+            return Guid.TryParse(thisValue.ToString(), out outValue);
         }
 
         /// <summary>
@@ -219,17 +230,54 @@ namespace MySqlSugar
         }
 
         /// <summary>
-        ///是适合正则匹配?
+        /// 是适合正则匹配?
         /// </summary>
         /// <param name="thisValue"></param>
-        /// <param name="begin">大于等于begin</param>
-        /// <param name="end">小于等于end</param>
+        /// <param name="pattern"></param>
         /// <returns></returns>
         public static bool IsMatch(this object thisValue, string pattern)
         {
             if (thisValue == null) return false;
             Regex reg = new Regex(pattern);
             return reg.IsMatch(thisValue.ToString());
+        }
+
+        /// <summary>
+        /// 是否是动态类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsAnonymousType(this Type type)
+        {
+            string typeName = type.Name;
+            return typeName.Contains("<>") && typeName.Contains("__") && typeName.Contains("AnonymousType");
+        }
+        /// <summary>
+        /// 是List类型
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsCollectionsList(this string thisValue)
+        {
+            return (thisValue + "").StartsWith("System.Collections.Generic.List");
+        }
+        /// <summary>
+        /// 是string[]类型
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsStringArray(this string thisValue)
+        {
+            return (thisValue + "").IsMatch(@"System\.[a-z,A-Z,0-9]+?\[\]");
+        }
+        /// <summary>
+        /// 是Enumerable
+        /// </summary>
+        /// <param name="thisValue"></param>
+        /// <returns></returns>
+        public static bool IsEnumerable(this string thisValue)
+        {
+            return (thisValue + "").StartsWith("System.Linq.Enumerable");
         }
     }
 }
