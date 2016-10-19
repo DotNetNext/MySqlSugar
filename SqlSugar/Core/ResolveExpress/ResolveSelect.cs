@@ -55,6 +55,18 @@ namespace MySqlSugar
                     reval.SelectValue = Regex.Replace(reval.SelectValue,@"\."+item.Key,"."+item.Value);
                 }
             }
+            reval.SelectValue = ConvertSelectValue(reval.SelectValue);
+        }
+        internal static string ConvertSelectValue(string selectValue) {
+            if (selectValue.IsNullOrEmpty()) return "*";
+            var array = selectValue.Split(',');
+            selectValue = string.Join(",", array.Select(it => {
+               if(it.IsNullOrEmpty())return it;
+               if(!it.Contains("=")) return it;
+               var innerArray=it.Split('=').OrderBy(a=>a.Split('.').Length).ToArray();
+               return innerArray.Last().GetTranslationSqlName() + " AS " + innerArray.First().GetTranslationSqlName();
+            }));
+            return selectValue;
         }
 
         private static bool IsComplexAnalysis(string expStr)
@@ -132,6 +144,7 @@ namespace MySqlSugar
                     reval.SelectValue = Regex.Replace(reval.SelectValue, @"\=" + item.Key, "=" + item.Value);
                 }
             }
+            reval.SelectValue = ConvertSelectValue(reval.SelectValue);
         }
 
         /// <summary>

@@ -372,15 +372,18 @@ namespace MySqlSugar
         /// <returns></returns>
         internal static string GetTranslationSqlName(string name)
         {
-            Check.ArgumentNullException(name, "表名不能为空。");
-            var hasScheme = name.Contains(".");
+            Check.ArgumentNullException(name, "列名不能为空。");
+            if (name.Contains("'")) return name;
             if (name.Contains("`")) return name;
+            if (name.Contains("@")) return name;
+            if (name.Trim().IsInt()) return name;
+            var hasScheme = name.Contains(".");
             if (hasScheme)
             {
                 var array = name.Split('.');
                 if (array.Length == 2)
                 {
-                    return string.Format("`{0}`.`{1}`", array.First(), array.Last());
+                    return string.Format("{0}.`{1}`", array.First(), array.Last());
                 }
                 else
                 {

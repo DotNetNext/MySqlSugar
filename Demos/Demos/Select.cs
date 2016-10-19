@@ -367,28 +367,28 @@ namespace NewTest.Demos
                 //转成json
                 string list4 = db.SqlQueryJson("select * from student");
                 //返回int
-                var list5 = db.SqlQuery<int>("select top 1 id from Student").SingleOrDefault();
+                var list5 = db.SqlQuery<int>("select id from Student limit 0,1").SingleOrDefault();
                 //反回键值
                 Dictionary<string, string> list6 = db.SqlQuery<KeyValuePair<string, string>>("select id,name from Student").ToDictionary(it => it.Key, it => it.Value);
                 //反回List<string[]>
-                var list7 = db.SqlQuery<string[]>("select top 1 id,name from Student").SingleOrDefault();
+                var list7 = db.SqlQuery<string[]>("select  id,name from Student limit 0,1").SingleOrDefault();
                 //存储过程
-                var spResult = db.SqlQuery<School>("exec sp_school @p1,@p2", new { p1 = 1, p2 = 2 });
+                //var spResult = db.SqlQuery<School>("exec sp_school @p1,@p2", new { p1 = 1, p2 = 2 });
 
                 //存储过程加Output 
-                var pars = SqlSugarTool.GetParameters(new { p1 = 1,p2=0 }); //将匿名对象转成SqlParameter
-                db.IsClearParameters = false;//禁止清除参数
-                pars[1].Direction = ParameterDirection.Output; //将p2设为 output
-                var spResult2 = db.SqlQuery<School>("exec sp_school @p1,@p2 output", pars);
-                db.IsClearParameters = true;//启用清除参数
-                var outPutValue = pars[1].Value;//获取output @p2的值
+                //var pars = SqlSugarTool.GetParameters(new { p1 = 1,p2=0 }); //将匿名对象转成SqlParameter
+                //db.IsClearParameters = false;//禁止清除参数
+                //pars[1].Direction = ParameterDirection.Output; //将p2设为 output
+                //var spResult2 = db.SqlQuery<School>("exec sp_school @p1,@p2 output", pars);
+                //db.IsClearParameters = true;//启用清除参数
+                //var outPutValue = pars[1].Value;//获取output @p2的值
 
 
-                //存储过程优化操作
-                var pars2 = SqlSugarTool.GetParameters(new { p1 = 1, p2 = 0 }); //将匿名对象转成SqlParameter
-                db.CommandType = CommandType.StoredProcedure;//指定为存储过程可比上面少写EXEC和参数
-                var spResult3 = db.SqlQuery<School>("sp_school", pars2);
-                db.CommandType = CommandType.Text;//还原回默认
+                ////存储过程优化操作
+                //var pars2 = SqlSugarTool.GetParameters(new { p1 = 1, p2 = 0 }); //将匿名对象转成SqlParameter
+                //db.CommandType = CommandType.StoredProcedure;//指定为存储过程可比上面少写EXEC和参数
+                //var spResult3 = db.SqlQuery<School>("sp_school", pars2);
+                //db.CommandType = CommandType.Text;//还原回默认
 
 
                 //获取第一行第一列的值
@@ -465,7 +465,7 @@ namespace NewTest.Demos
                 }
                 if (id > 0)
                 {
-                    sable = sable.Where("l.id in (select top 10 id from school)");//where加子查询
+                    sable = sable.Where("l.id in(1)");//where加子查询
                 }
                 var pars = new { id = id, name = name };
                 int pageCount = sable.Count(pars);

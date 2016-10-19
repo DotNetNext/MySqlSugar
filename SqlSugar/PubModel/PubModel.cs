@@ -115,7 +115,7 @@ namespace MySqlSugar
             /// <summary>
             /// SqlQuery查询的SQL模板
             /// </summary>
-            public const string SqlQuerySqlTemplate = @"--{0}
+            public const string SqlQuerySqlTemplate = @"# {0}
 {1}";
         }
     }
