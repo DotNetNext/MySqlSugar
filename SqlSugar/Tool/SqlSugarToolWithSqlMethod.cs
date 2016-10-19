@@ -162,23 +162,9 @@ namespace MySqlSugar
             else
             {
                 string sql = string.Format(@"
-                            declare @Table_name varchar(60)
-                            set @Table_name = '{0}';
-
-
-                            Select so.name tableName,                   --表名字
-                                   sc.name keyName,             --自增字段名字
-                                   ident_current(so.name) curr_value,    --自增字段当前值
-                                   ident_incr(so.name) incr_value,       --自增字段增长值
-                                   ident_seed(so.name) seed_value        --自增字段种子值
-                              from sysobjects so 
-                            Inner Join syscolumns sc
-                                on so.id = sc.id
-
-                                   and columnproperty(sc.id, sc.name, 'IsIdentity') = 1
-
-                            Where upper(so.name) = upper(@Table_name)
-         ", tableName);
+                           select TABLE_NAME as tableName,COLUMN_NAME as keyName  from INFORMATION_SCHEMA.COLUMNS
+                       where table_name='" + tableName + @"' AND EXTRA='auto_increment';
+                 ", tableName);
                 var isLog = db.IsEnableLogEvent;
                 db.IsEnableLogEvent = false;
                 var dt = db.GetDataTable(sql);
