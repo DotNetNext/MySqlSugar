@@ -82,11 +82,6 @@
     <Compile Include="Models\V_Student.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="T4\Model.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SqlSugar\MySqlSugar.csproj">
@@ -96,10 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataBase\sqlsugartest.sql" />
-    <Content Include="T4\Model.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
