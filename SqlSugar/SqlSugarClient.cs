@@ -687,7 +687,7 @@ namespace MySqlSugar
                 }
                 else
                 {
-                    sbInsertSql.Append(");select SCOPE_IDENTITY();");
+                    sbInsertSql.Append(");select @@IDENTITY;");
                 }
                 cacheSqlManager.Add(cacheSqlKey, sbInsertSql, cacheSqlManager.Day);
             }
@@ -1112,152 +1112,10 @@ namespace MySqlSugar
         /// <returns>全部更新成功返回true</returns>
         public bool SqlBulkReplace<T>(List<T> entities) where T : class
         {
-            InitAttributes<T>();
-            int actionNum = BulkNum;
-            var reval = true;
-            while (entities.Count > 0)
-            {
-                var insertRes = SqlBulkReplace<T>(entities.Take(actionNum));
-                if (reval && insertRes)
-                {
-                    reval = true;
-                }
-                else
-                {
-                    reval = false;
-                }
-                if (actionNum > entities.Count)
-                {
-                    actionNum = entities.Count;
-                }
-                entities.RemoveRange(0, actionNum);
-            }
-            return reval;
+            var result = UpdateRange(entities);
+            return result != null && !result.Any(it => it == false);
         }
-
-        private bool SqlBulkReplace<T>(IEnumerable<T> entities) where T : class
-        {
-            InitAttributes<T>();
-            if (entities == null) { return false; };
-
-            Type type = typeof(T);
-
-            //属性缓存
-            string cachePropertiesKey = "db." + type.FullName + ".GetProperties";
-            var cachePropertiesManager = CacheManager<PropertyInfo[]>.GetInstance();
-            PropertyInfo[] props = null;
-            if (cachePropertiesManager.ContainsKey(cachePropertiesKey))
-            {
-                props = cachePropertiesManager[cachePropertiesKey];
-            }
-            else
-            {
-                props = type.GetProperties();
-                cachePropertiesManager.Add(cachePropertiesKey, props, cachePropertiesManager.Day);
-            }
-
-            string typeName = type.Name;
-            typeName = GetTableNameByClassType(typeName);
-            string pkName = SqlSugarTool.GetPrimaryKeyByTableName(this, typeName);
-            var identityNames = SqlSugarTool.GetIdentitiesKeyByTableName(this, typeName);
-            var isIdentity = identityNames != null && identityNames.Count > 0;
-            var columnNames = props.Select(it => it.Name).ToList();
-            if (DisableUpdateColumns.IsValuable())
-            {//去除禁止插入列
-                columnNames.RemoveAll(it => DisableUpdateColumns.Any(dc => dc.ToLower().Contains(it.ToLower())));
-            }
-            //启用别名列
-            if (this.IsEnableAttributeMapping = true && _mappingColumns.IsValuable())
-            {
-                //将别名列转换成数据列
-                columnNames = columnNames.Select(it =>
-                {
-                    var cmInfo = _mappingColumns.Where(mc => mc.Key == it).ToList();
-                    return cmInfo.IsValuable() ? cmInfo.Single().Value : it;
-                }).ToList();
-            }
-            if (this.IsIgnoreErrorColumns)
-            {//去除非数据库列
-                var tableColumns = SqlSugarTool.GetColumnsByTableName(this, typeName);
-                columnNames = columnNames.Where(it => tableColumns.Any(tc => tc.ToLower() == it.ToLower())).ToList();
-            }
-            var columnNamesWidthIdentity = columnNames;
-            if (isIdentity)
-            {
-                columnNames = columnNames.Where(c => !identityNames.Any(it => it.Value == c)).ToList();//去掉自添列
-
-            }
-            Check.Exception(columnNames == null || columnNames.Count == 0, "没有可插入的列，请查看实体和插入配置。");
-
-            StringBuilder sbSql = new StringBuilder();
-            sbSql.AppendFormat(@"UPDATE S SET {{0}} FROM {1} S INNER JOIN 
-            (
-              {{1}}
-
-            ) T  ON T.{0}=S.{0}",pkName.GetTranslationSqlName(),typeName.GetTranslationSqlName());
-            StringBuilder sbSqlInnerFromTables = new StringBuilder();
-            StringBuilder sbSqlInnerUpdateColumns = new StringBuilder();
-            sbSqlInnerUpdateColumns.Append(string.Join(",", columnNames.Select(it => "S." + it.GetTranslationSqlName() + "=" + "T." + it.GetTranslationSqlName())));
-            foreach (var entity in entities)
-            {
-
-                sbSqlInnerFromTables.AppendLine("SELECT ");
-                foreach (var name in columnNamesWidthIdentity)
-                {
-                    var className = name;
-                    //启用别名列
-                    if (this.IsEnableAttributeMapping = true && _mappingColumns.IsValuable())
-                    {
-                        var mappInfo = _mappingColumns.Where(mc => mc.Value.ToLower() == name.ToLower()).ToList();
-                        if (mappInfo.IsValuable())
-                        {
-                            className = mappInfo.Single().Key;
-                        }
-                    }
-                    var isLastName = name == columnNames.Last();
-                    var prop = props.Single(it => it.Name == className);
-                    var objValue = prop.GetValue(entity, null);
-                    bool isNullable = false;
-                    var underType = SqlSugarTool.GetUnderType(prop, ref isNullable);
-                    if (objValue == null)
-                    {
-                        objValue = "NULL";
-                    }
-                    else if (underType == SqlSugarTool.DateType)
-                    {
-                        objValue = "'" + objValue.ToString() + "'";
-                    }
-                    else if (underType == SqlSugarTool.BoolType)
-                    {
-                        objValue = Convert.ToBoolean(objValue) ? 1 : 0;
-                    }
-                    else if (underType == SqlSugarTool.StringType)
-                    {
-                        //string参数需要处理注入 (因为SqlParameter参数上限为2100所以无法使用参数化)
-                        objValue = "'" + objValue.ToString().ToSqlFilter() + "'";
-                    }
-                    else
-                    {
-                        objValue = "'" + objValue.ToString() + "'";
-                    }
-
-                    sbSqlInnerFromTables.Append(objValue + (isLastName ? (" AS "+name) :(" AS "+name+",")));
-                }
-                var isLastEntity = entities.Last() == entity;
-                if (!isLastEntity)
-                {
-                    sbSqlInnerFromTables.AppendLine(" UNION ALL ");
-                }
-            }
-
-            string sql = string.Format(sbSql.ToString(), sbSqlInnerUpdateColumns.ToString(), sbSqlInnerFromTables);
-            var reval = base.ExecuteCommand(sql);
-            sbSqlInnerFromTables = null;
-            sbSqlInnerUpdateColumns=null;
-            sbSql = null;
-            sql = null;
-            return reval > 0;
-        }
+ 
         #endregion
 
 
