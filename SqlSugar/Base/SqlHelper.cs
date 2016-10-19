@@ -16,8 +16,8 @@ namespace SqlSugar
     /// </summary>
     public class SqlHelper : IDisposable
     {
-        SqlConnection _sqlConnection;
-        SqlTransaction _tran = null;
+        MySqlConnection _MySqlConnection;
+        MySqlTransaction _tran = null;
         /// <summary>
         /// 如何解释命令字符串 默认为Text 
         /// </summary>
@@ -56,17 +56,17 @@ namespace SqlSugar
         /// <param name="connectionString"></param>
         public SqlHelper(string connectionString)
         {
-            _sqlConnection = new SqlConnection(connectionString);
-            _sqlConnection.Open();
+            _MySqlConnection = new MySqlConnection(connectionString);
+            _MySqlConnection.Open();
         }
         /// <summary>
         /// 获取当前数据库连接对象
         /// </summary>
         /// <returns></returns>
 
-        public SqlConnection GetConnection()
+        public MySqlConnection GetConnection()
         {
-            return _sqlConnection;
+            return _MySqlConnection;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace SqlSugar
         /// </summary>
         public void BeginTran()
         {
-            _tran = _sqlConnection.BeginTransaction();
+            _tran = _MySqlConnection.BeginTransaction();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace SqlSugar
         /// <param name="iso">指定事务行为</param>
         public void BeginTran(IsolationLevel iso)
         {
-            _tran = _sqlConnection.BeginTransaction(iso);
+            _tran = _MySqlConnection.BeginTransaction(iso);
         }
         /// <summary>
         /// 开始事务
@@ -91,7 +91,7 @@ namespace SqlSugar
         /// <param name="transactionName"></param>
         public void BeginTran(string transactionName)
         {
-            _tran = _sqlConnection.BeginTransaction(transactionName);
+            _tran = _MySqlConnection.BeginTransaction(transactionName);
         }
         /// <summary>
         /// 开始事务
@@ -100,7 +100,7 @@ namespace SqlSugar
         /// <param name="transactionName"></param>
         public void BeginTran(IsolationLevel iso, string transactionName)
         {
-            _tran = _sqlConnection.BeginTransaction(iso, transactionName);
+            _tran = _MySqlConnection.BeginTransaction(iso, transactionName);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace SqlSugar
         public object GetScalar(string sql, params SqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
             sqlCommand.CommandType = CommandType;
             if (_tran != null)
             {
@@ -265,7 +265,7 @@ namespace SqlSugar
         public int ExecuteCommand(string sql, params SqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
             sqlCommand.CommandType = CommandType;
             sqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
@@ -305,7 +305,7 @@ namespace SqlSugar
         public SqlDataReader GetReader(string sql, params SqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlCommand sqlCommand = new SqlCommand(sql, _sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
             sqlCommand.CommandType = CommandType;
             sqlCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
@@ -395,7 +395,7 @@ namespace SqlSugar
         public DataTable GetDataTable(string sql, params SqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _sqlConnection);
+            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
             _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
@@ -433,7 +433,7 @@ namespace SqlSugar
         public DataSet GetDataSetAll(string sql, params SqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _sqlConnection);
+            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
             if (_tran != null)
             {
                 _sqlDataAdapter.SelectCommand.Transaction = _tran;
@@ -476,15 +476,15 @@ namespace SqlSugar
         /// </summary>
         public void Dispose()
         {
-            if (_sqlConnection != null)
+            if (_MySqlConnection != null)
             {
-                if (_sqlConnection.State != ConnectionState.Closed)
+                if (_MySqlConnection.State != ConnectionState.Closed)
                 {
                     if (_tran != null)
                         _tran.Commit();
-                    _sqlConnection.Close();
+                    _MySqlConnection.Close();
                 }
-                _sqlConnection = null;
+                _MySqlConnection = null;
             }
         }
     }
