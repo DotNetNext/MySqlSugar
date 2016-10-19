@@ -218,15 +218,15 @@ namespace MySqlSugar
             string sql = null;
             if (tableOrView == null)
             {
-                sql = "select name from sysobjects where xtype in ('U','V') ";
+                sql = " show table status ";
             }
             else if (tableOrView == true)
             {
-                sql = "select name from sysobjects where xtype in ('U') ";
+                sql = " show table status where comment='';";
             }
             else
             {
-                sql = "select name from sysobjects where xtype in ('V') ";
+                sql = " show table status where comment='view'";
             }
             return sql;
         }
