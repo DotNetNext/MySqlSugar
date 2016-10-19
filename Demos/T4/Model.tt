@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Xml" #>
@@ -10,8 +10,9 @@
 <#@ import namespace="MySqlSugar" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Web" #>
-<#@ assembly name="$(SolutionDir)SqlSugar\Lib\MySqlSugar.dll" #>
+<#@ import namespace="MySql.Data.MySqlClient" #>
 <#@ assembly name="$(SolutionDir)SqlSugar\Lib\MySql.Data.dll" #>
+<#@ assembly name="$(SolutionDir)SqlSugar\Lib\MySqlSugar.dll" #>
 <# 
      
 	//CTRL+S将会执行该文件的代码，自动作生实体
