@@ -64,9 +64,6 @@ namespace NewTest
                 //流水号功能
                 case "serialnumber": demo = new SerialNumber(); break;
 
-                //多语言支持 http://www.cnblogs.com/sunkaixuan/p/5709583.html
-                //多库并行计算 http://www.cnblogs.com/sunkaixuan/p/5046517.html
-
                 //配置与实例的用法
                 case "initconfig": demo = new InitConfig(); break;
 
@@ -75,8 +72,7 @@ namespace NewTest
                 /****************************支持**************************************/
                 //公开函数数
                 case "pubmethod": demo = new PubMethod(); break;
-                //Sql2012分页的支持
-                case "sqlpagemodel": demo=new SqlPageModel(); break;
+
                 //设置ToJson的日期格式
                 case "serializerdateformat":demo =new SerializerDateFormat();break;
 
