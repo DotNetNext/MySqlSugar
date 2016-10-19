@@ -428,22 +428,22 @@ namespace MySqlSugar
         {
             Check.ArgumentNullException(name, "表名不能为空。");
             var hasScheme = name.Contains(".");
-            if (name.Contains("[")) return name;
+            if (name.Contains("`")) return name;
             if (hasScheme)
             {
                 var array = name.Split('.');
                 if (array.Length == 2)
                 {
-                    return string.Format("[{0}].[{1}]", array.First(), array.Last());
+                    return string.Format("`{0}`.`{1}`", array.First(), array.Last());
                 }
                 else
                 {
-                    return string.Join(".", array.Select(it => "[" + it + "]"));
+                    return string.Join(".", array.Select(it => "`" + it + "`"));
                 }
             }
             else
             {
-                return "[" + name + "]";
+                return "`" + name + "`";
             }
         }
         /// <summary>
