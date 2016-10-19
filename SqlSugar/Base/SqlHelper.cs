@@ -35,7 +35,7 @@ namespace SqlSugar
         /// </summary>
         public Action<string, string> LogEventCompleted = null;
         /// <summary>
-        /// 是否清空SqlParameters
+        /// 是否清空MySqlParameters
         /// </summary>
         public bool IsClearParameters = true;
         /// <summary>
@@ -43,7 +43,7 @@ namespace SqlSugar
         /// </summary>
         public int CommandTimeOut = 30000;
         /// <summary>
-        /// 将页面参数自动填充到SqlParameter []，无需在程序中指定参数
+        /// 将页面参数自动填充到MySqlParameter []，无需在程序中指定参数
         /// 例如：
         ///     var list = db.Queryable&lt;Student&gt;().Where("id=@id").ToList();
         ///     以前写法
@@ -144,7 +144,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public string GetString(string sql, params SqlParameter[] pars)
+        public string GetString(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToString(GetScalar(sql, pars));
         }
@@ -166,7 +166,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public int GetInt(string sql, params SqlParameter[] pars)
+        public int GetInt(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToInt32(GetScalar(sql, pars));
         }
@@ -177,7 +177,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public Double GetDouble(string sql, params SqlParameter[] pars)
+        public Double GetDouble(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDouble(GetScalar(sql, pars));
         }
@@ -188,7 +188,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public decimal GetDecimal(string sql, params SqlParameter[] pars)
+        public decimal GetDecimal(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDecimal(GetScalar(sql, pars));
         }
@@ -199,7 +199,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DateTime GetDateTime(string sql, params SqlParameter[] pars)
+        public DateTime GetDateTime(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDateTime(GetScalar(sql, pars));
         }
@@ -221,7 +221,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public object GetScalar(string sql, params SqlParameter[] pars)
+        public object GetScalar(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
@@ -235,7 +235,7 @@ namespace SqlSugar
                 sqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToSqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
             }
             object scalar = sqlCommand.ExecuteScalar();
             scalar = (scalar == null ? 0 : scalar);
@@ -262,7 +262,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public int ExecuteCommand(string sql, params SqlParameter[] pars)
+        public int ExecuteCommand(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
@@ -276,7 +276,7 @@ namespace SqlSugar
                 sqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToSqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
             }
             int count = sqlCommand.ExecuteNonQuery();
             if (IsClearParameters)
@@ -302,7 +302,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public SqlDataReader GetReader(string sql, params SqlParameter[] pars)
+        public SqlDataReader GetReader(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             SqlCommand sqlCommand = new SqlCommand(sql, _MySqlConnection);
@@ -316,7 +316,7 @@ namespace SqlSugar
                 sqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToSqlParameters(sqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(sqlCommand.Parameters);
             }
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             if (IsClearParameters)
@@ -344,7 +344,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public List<T> GetList<T>(string sql, params SqlParameter[] pars)
+        public List<T> GetList<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null);
             return reval;
@@ -369,7 +369,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public T GetSingle<T>(string sql, params SqlParameter[] pars)
+        public T GetSingle<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null).Single();
             return reval;
@@ -392,7 +392,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DataTable GetDataTable(string sql, params SqlParameter[] pars)
+        public DataTable GetDataTable(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
@@ -400,7 +400,7 @@ namespace SqlSugar
             _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToSqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
             }
             _sqlDataAdapter.SelectCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
@@ -430,7 +430,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DataSet GetDataSetAll(string sql, params SqlParameter[] pars)
+        public DataSet GetDataSetAll(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
@@ -440,7 +440,7 @@ namespace SqlSugar
             }
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToSqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToMySqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
             }
             _sqlDataAdapter.SelectCommand.CommandTimeout = this.CommandTimeOut;
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
@@ -453,7 +453,7 @@ namespace SqlSugar
             return ds;
         }
 
-        private void ExecLogEvent(string sql, SqlParameter[] pars, bool isStarting = true)
+        private void ExecLogEvent(string sql, MySqlParameter[] pars, bool isStarting = true)
         {
             if (IsEnableLogEvent)
             {
