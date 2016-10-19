@@ -262,7 +262,7 @@ namespace MySqlSugar
 
         internal static string GetSelectTopSql()
         {
-            return "select top 1 * from {0}";
+            return "select  * from {0} limit 0,1";
         }
 
         /// <summary>
