@@ -85,23 +85,7 @@ namespace SqlSugar
         {
             _tran = _MySqlConnection.BeginTransaction(iso);
         }
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        /// <param name="transactionName"></param>
-        public void BeginTran(string transactionName)
-        {
-            _tran = _MySqlConnection.BeginTransaction(transactionName);
-        }
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        /// <param name="iso">指定事务行为</param>
-        /// <param name="transactionName"></param>
-        public void BeginTran(IsolationLevel iso, string transactionName)
-        {
-            _tran = _MySqlConnection.BeginTransaction(iso, transactionName);
-        }
+ 
 
         /// <summary>
         /// 回滚事务
