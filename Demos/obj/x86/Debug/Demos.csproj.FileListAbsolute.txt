@@ -1,0 +1,10 @@
+F:\MyOpenSource\MySql\Demos\bin\Debug\Demos.exe.config
+F:\MyOpenSource\MySql\Demos\bin\Debug\Demos.exe
+F:\MyOpenSource\MySql\Demos\bin\Debug\Demos.pdb
+F:\MyOpenSource\MySql\Demos\bin\Debug\MySql.Data.dll
+F:\MyOpenSource\MySql\Demos\bin\Debug\MySqlSugar.dll
+F:\MyOpenSource\MySql\Demos\bin\Debug\MySqlSugar.pdb
+F:\MyOpenSource\MySql\Demos\bin\Debug\MySqlSugar.xml
+F:\MyOpenSource\MySql\Demos\obj\x86\Debug\Demos.csprojResolveAssemblyReference.cache
+F:\MyOpenSource\MySql\Demos\obj\x86\Debug\Demos.exe
+F:\MyOpenSource\MySql\Demos\obj\x86\Debug\Demos.pdb
