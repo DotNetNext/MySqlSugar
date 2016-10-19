@@ -126,7 +126,7 @@ namespace SqlSugar
         /// 获取参数到键值集合根据页面Request参数
         /// </summary>
         /// <returns></returns>
-        public static SqlParameter[] GetParameterArray(bool isNotNullAndEmpty = false)
+        public static MySqlParameter[] GetParameterArray(bool isNotNullAndEmpty = false)
         {
             Dictionary<string, string> paraDictionaryByGet = HttpContext.Current.Request.QueryString.Keys.Cast<string>()
                    .ToDictionary(k => k, v => HttpContext.Current.Request.QueryString[v]);
@@ -139,7 +139,7 @@ namespace SqlSugar
             {
                 paraDictionarAll = paraDictionarAll.Where(it => !string.IsNullOrEmpty(it.Value));
             }
-            return paraDictionarAll.Select(it => new SqlParameter(SqlSugarTool.ParSymbol + it.Key, it.Value)).ToArray();
+            return paraDictionarAll.Select(it => new MySqlParameter(SqlSugarTool.ParSymbol + it.Key, it.Value)).ToArray();
         }
     }
 }

@@ -117,7 +117,7 @@ namespace SqlSugar
         /// 设置参数Size
         /// </summary>
         /// <param name="par"></param>
-        public static void SetParSize(SqlParameter par)
+        public static void SetParSize(MySqlParameter par)
         {
             int size = par.Size;
             if (size < 4000)
@@ -132,9 +132,9 @@ namespace SqlSugar
         /// <param name="obj"></param>
         /// <param name="pis"></param>
         /// <returns></returns>
-        public static SqlParameter[] GetParameters(object obj,PropertyInfo [] pis=null)
+        public static MySqlParameter[] GetParameters(object obj, PropertyInfo[] pis = null)
         {
-            List<SqlParameter> listParams = new List<SqlParameter>();
+            List<MySqlParameter> listParams = new List<MySqlParameter>();
             if (obj != null)
             {
                 var type = obj.GetType();
@@ -144,7 +144,7 @@ namespace SqlSugar
                     if (type == SqlSugarTool.DicArraySO)
                     {
                         var newObj = (Dictionary<string, object>)obj;
-                        var pars = newObj.Select(it => new SqlParameter("@" + it.Key, it.Value));
+                        var pars = newObj.Select(it => new MySqlParameter("@" + it.Key, it.Value));
                         foreach (var par in pars)
                         {
                             SetParSize(par);
@@ -155,7 +155,7 @@ namespace SqlSugar
                     {
 
                         var newObj = (Dictionary<string, string>)obj;
-                        var pars = newObj.Select(it => new SqlParameter("@" + it.Key, it.Value));
+                        var pars = newObj.Select(it => new MySqlParameter("@" + it.Key, it.Value));
                         foreach (var par in pars)
                         {
                             SetParSize(par);
@@ -184,14 +184,11 @@ namespace SqlSugar
                         if (value == null) value = DBNull.Value;
                         if (r.Name.ToLower().Contains("hierarchyid"))
                         {
-                            var par = new SqlParameter("@" + r.Name, SqlDbType.Udt);
-                            par.UdtTypeName = "HIERARCHYID";
-                            par.Value = value;
-                            listParams.Add(par);
+
                         }
                         else
                         {
-                            var par = new SqlParameter("@" + r.Name, value);
+                            var par = new MySqlParameter("@" + r.Name, value);
                             SetParSize(par);
                             listParams.Add(par);
                         }

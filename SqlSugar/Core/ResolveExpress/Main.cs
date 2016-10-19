@@ -30,7 +30,7 @@ namespace SqlSugar
 
         public string SqlWhere = null;
         public ResolveExpressType Type = ResolveExpressType.oneT;
-        public List<SqlParameter> Paras = new List<SqlParameter>();
+        public List<MySqlParameter> Paras = new List<MySqlParameter>();
         private int SameIndex = 1;
         private SqlSugarClient DB;
 
@@ -249,11 +249,11 @@ namespace SqlSugar
             }
             if (right == null)
             {
-                this.Paras.Add(new SqlParameter(SqlSugarTool.ParSymbol + left, DBNull.Value));
+                this.Paras.Add(new MySqlParameter(SqlSugarTool.ParSymbol + left, DBNull.Value));
             }
             else
             {
-                this.Paras.Add(new SqlParameter(SqlSugarTool.ParSymbol + left, right));
+                this.Paras.Add(new MySqlParameter(SqlSugarTool.ParSymbol + left, right));
             }
             return oldLeft;
         }
@@ -275,11 +275,11 @@ namespace SqlSugar
             }
             if (left == null)
             {
-                this.Paras.Add(new SqlParameter(SqlSugarTool.ParSymbol + right, DBNull.Value));
+                this.Paras.Add(new MySqlParameter(SqlSugarTool.ParSymbol + right, DBNull.Value));
             }
             else
             {
-                this.Paras.Add(new SqlParameter(SqlSugarTool.ParSymbol + right, left));
+                this.Paras.Add(new MySqlParameter(SqlSugarTool.ParSymbol + right, left));
             }
             return oldRight;
         }

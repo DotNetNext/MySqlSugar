@@ -53,7 +53,7 @@ namespace SqlSugar
         /// <summary>
         /// SqlParameter临时数据
         /// </summary>
-        internal List<SqlParameter> Params = new List<SqlParameter>();
+        internal List<MySqlParameter> Params = new List<MySqlParameter>();
         /// <summary>
         /// 表名临时数据
         /// </summary>

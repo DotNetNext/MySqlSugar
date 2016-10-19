@@ -38,6 +38,6 @@ namespace SqlSugar
         /// <summary>
         /// 参数
         /// </summary>
-        public List<SqlParameter> Params = new List<SqlParameter>();
+        public List<MySqlParameter> Params = new List<MySqlParameter>();
     }
 }

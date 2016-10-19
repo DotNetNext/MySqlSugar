@@ -458,7 +458,7 @@ namespace SqlSugar
         /// <param name="sql">sql语句</param>
         /// <param name="pars">SqlParameter的集合</param>
         /// <returns>T的集合</returns>
-        public List<T> SqlQuery<T>(string sql, SqlParameter[] pars)
+        public List<T> SqlQuery<T>(string sql, MySqlParameter[] pars)
         {
             return SqlQuery<T>(sql, pars.ToList());
         }
@@ -470,9 +470,9 @@ namespace SqlSugar
         /// <param name="sql">sql语句</param>
         /// <param name="pars">SqlParameter集合</param>
         /// <returns>T的集合</returns>
-        public List<T> SqlQuery<T>(string sql, List<SqlParameter> pars)
+        public List<T> SqlQuery<T>(string sql, List<MySqlParameter> pars)
         {
-            SqlDataReader reader = null;
+            MySqlDataReader reader = null;
             //全局过滤器
             if (CurrentFilterKey.IsValuable())
             {
@@ -546,7 +546,7 @@ namespace SqlSugar
             typeName = GetTableNameByClassType(typeName);
 
             StringBuilder sbInsertSql = new StringBuilder();
-            List<SqlParameter> pars = new List<SqlParameter>();
+            List<MySqlParameter> pars = new List<MySqlParameter>();
             var identities = SqlSugarTool.GetIdentitiesKeyByTableName(this, typeName);
             isIdentity = identities != null && identities.Count > 0;
             //sql语句缓存
@@ -672,12 +672,8 @@ namespace SqlSugar
                         val = (int)(val);
                     }
 
-                    var par = new SqlParameter(SqlSugarTool.ParSymbol + propName, val);
+                    var par = new MySqlParameter(SqlSugarTool.ParSymbol + propName, val);
                     SqlSugarTool.SetParSize(par);
-                    if (par.SqlDbType == SqlDbType.Udt)
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
-                    }
                     pars.Add(par);
                 }
             }
@@ -935,17 +931,13 @@ namespace SqlSugar
                 cacheSqlManager.Add(cacheSqlKey, sbSql, cacheSqlManager.Day);
             }
 
-            List<SqlParameter> parsList = new List<SqlParameter>();
+            List<MySqlParameter> parsList = new List<MySqlParameter>();
             parsList.AddRange(re.Paras);
             var pars = rows;
             if (pars != null)
             {
                 foreach (var par in pars)
                 {
-                    if (par.SqlDbType == SqlDbType.Udt)
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
-                    }
                     par.ParameterName = SqlSugarTool.ParSymbol + GetMappingColumnDbName(par.ParameterName.TrimStart(SqlSugarTool.ParSymbol));
                     SqlSugarTool.SetParSize(par);
                     parsList.Add(par);
@@ -1093,10 +1085,6 @@ namespace SqlSugar
                     if (par.Value != null && par.Value.GetType().IsClass && par.Value.GetType() != SqlSugarTool.StringType)
                     {
                         par.Value = DBNull.Value;
-                    }
-                    if (par.SqlDbType == SqlDbType.Udt || par.ParameterName.ToLower().Contains("hierarchyid"))
-                    {
-                        par.UdtTypeName = "HIERARCHYID";
                     }
                     par.ParameterName = name;
                     return par;
@@ -1298,7 +1286,7 @@ namespace SqlSugar
             var pkValue=type.GetProperty(pkClassPropName).GetValue(deleteObj,null);
             Check.Exception(pkValue == DBNull.Value, typeName + "主键的值不能为DBNull.Value。");
             string sql = string.Format("DELETE FROM {0} WHERE {1}={2}", typeName.GetTranslationSqlName(),pkName.GetTranslationSqlName(), pkName.GetSqlParameterName());
-            var par = new SqlParameter(pkName.GetSqlParameterName(), pkValue);
+            var par = new MySqlParameter(pkName.GetSqlParameterName(), pkValue);
             SqlSugarTool.SetParSize(par);
             bool isSuccess = ExecuteCommand(sql,par) > 0;
             return isSuccess;
