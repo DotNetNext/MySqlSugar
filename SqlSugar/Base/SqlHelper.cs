@@ -260,7 +260,7 @@ namespace SqlSugar
                 MySqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(MySqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToSqlParameters(MySqlCommand.Parameters);
             }
             int count = MySqlCommand.ExecuteNonQuery();
             if (IsClearParameters)
@@ -275,7 +275,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public SqlDataReader GetReader(string sql, object pars)
+        public MySqlDataReader GetReader(string sql, object pars)
         {
             return GetReader(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -286,7 +286,7 @@ namespace SqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public SqlDataReader GetReader(string sql, params MySqlParameter[] pars)
+        public MySqlDataReader GetReader(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
             MySqlCommand MySqlCommand = new MySqlCommand(sql, _MySqlConnection);
@@ -300,9 +300,9 @@ namespace SqlSugar
                 MySqlCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(MySqlCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToSqlParameters(MySqlCommand.Parameters);
             }
-            SqlDataReader sqlDataReader = MySqlCommand.ExecuteReader();
+            MySqlDataReader sqlDataReader = MySqlCommand.ExecuteReader();
             if (IsClearParameters)
                 MySqlCommand.Parameters.Clear();
             ExecLogEvent(sql, pars, false);
@@ -379,12 +379,12 @@ namespace SqlSugar
         public DataTable GetDataTable(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
+            MySqlDataAdapter _sqlDataAdapter = new MySqlDataAdapter(sql, _MySqlConnection);
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
             _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToSqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
             }
             _sqlDataAdapter.SelectCommand.CommandTimeout = this.CommandTimeOut;
             if (_tran != null)
@@ -417,14 +417,14 @@ namespace SqlSugar
         public DataSet GetDataSetAll(string sql, params MySqlParameter[] pars)
         {
             ExecLogEvent(sql, pars, true);
-            SqlDataAdapter _sqlDataAdapter = new SqlDataAdapter(sql, _MySqlConnection);
+            MySqlDataAdapter _sqlDataAdapter = new MySqlDataAdapter(sql, _MySqlConnection);
             if (_tran != null)
             {
                 _sqlDataAdapter.SelectCommand.Transaction = _tran;
             }
             if (IsGetPageParas)
             {
-                SqlSugarToolExtensions.RequestParasToMySqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
+                SqlSugarToolExtensions.RequestParasToSqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
             }
             _sqlDataAdapter.SelectCommand.CommandTimeout = this.CommandTimeOut;
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
