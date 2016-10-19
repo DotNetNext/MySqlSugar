@@ -118,13 +118,7 @@ namespace MySqlSugar
                 primaryInfo = cm[key];
             else
             {
-                string sql = @"  				SELECT a.name as keyName ,d.name as tableName
-  FROM   syscolumns a 
-  inner  join sysobjects d on a.id=d.id       
-  where  exists(SELECT 1 FROM sysobjects where xtype='PK' and  parent_obj=a.id and name in (  
-  SELECT name  FROM sysindexes   WHERE indid in(  
-  SELECT indid FROM sysindexkeys WHERE id = a.id AND colid=a.colid  
-)))";
+                string sql = @"select TABLE_NAME as tableName,COLUMN_NAME as keyName from INFORMATION_SCHEMA.COLUMNS where table_name='" + tableName + "' AND COLUMN_KEY='PRI';";
                 var isLog = db.IsEnableLogEvent;
                 db.IsEnableLogEvent = false;
                 var dt = db.GetDataTable(sql);
