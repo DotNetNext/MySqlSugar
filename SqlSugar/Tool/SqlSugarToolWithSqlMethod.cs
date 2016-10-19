@@ -66,26 +66,27 @@ namespace MySqlSugar
 
         internal static void GetSqlableSql(Sqlable sqlable, string fileds, string orderByFiled, int pageIndex, int pageSize, StringBuilder sbSql)
         {
-            if (sqlable.DB.PageModel == PageModel.RowNumber)
+
+            sbSql.Insert(0, string.Format("SELECT {0}", fileds));
+            sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
+            sbSql.Append(sqlable.GroupBy);
+            sbSql.AppendFormat(" ORDER BY {0} ", orderByFiled);
+            int skip = (pageIndex - 1) * pageSize;
+            int take = pageSize;
+            if (skip > 0 || take > 0)
             {
-                sbSql.Insert(0, string.Format("SELECT {0},row_index=ROW_NUMBER() OVER(ORDER BY {1} )", fileds, orderByFiled));
-                sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
-                sbSql.Append(sqlable.OrderBy);
-                sbSql.Append(sqlable.GroupBy);
-                int skip = (pageIndex - 1) * pageSize + 1;
-                int take = pageSize;
-                sbSql.Insert(0, "SELECT * FROM ( ");
-                sbSql.AppendFormat(") t WHERE  t.row_index BETWEEN {0}  AND {1}   ", skip, skip + take - 1);
-            }
-            else
-            {
-                sbSql.Insert(0, string.Format("SELECT {0}", fileds));
-                sbSql.Append(" WHERE 1=1 ").Append(string.Join(" ", sqlable.Where));
-                sbSql.Append(sqlable.GroupBy);
-                sbSql.AppendFormat(" ORDER BY {0} ", orderByFiled);
-                int skip = (pageIndex - 1) * pageSize;
-                int take = pageSize;
-                sbSql.AppendFormat("OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY", skip, take);
+                if (skip > 0 && take > 0)
+                {
+                    sbSql.AppendFormat("limit {0},{1}", skip, take);
+                }
+                else if (skip > 0)
+                {
+                    sbSql.AppendFormat("limit {0}", skip);
+                }
+                else if (take > 0)
+                {
+                    sbSql.AppendFormat("limit 0,{0}", take);
+                }
             }
         }
 
@@ -96,7 +97,7 @@ namespace MySqlSugar
         /// <returns></returns>
         public static string GetLockString(bool isNoLock)
         {
-            return isNoLock ? " WITH(NOLOCK) " : "";
+            return isNoLock ? " " : "";
         }
 
         /// <summary>
