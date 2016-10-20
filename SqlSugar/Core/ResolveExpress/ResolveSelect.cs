@@ -64,7 +64,7 @@ namespace MySqlSugar
                if(it.IsNullOrEmpty())return it;
                if(!it.Contains("=")) return it;
                var innerArray=it.Split('=').OrderBy(a=>a.Split('.').Length).ToArray();
-               return innerArray.Last().GetTranslationSqlName() + " AS " + innerArray.First().GetTranslationSqlName();
+               return innerArray.Last().GetTranslationSqlName().Trim() + " AS " + innerArray.First().Trim().GetTranslationSqlName();
             }));
             return selectValue;
         }
