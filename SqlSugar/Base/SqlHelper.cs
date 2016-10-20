@@ -85,7 +85,7 @@ namespace MySqlSugar
         {
             _tran = _MySqlConnection.BeginTransaction(iso);
         }
- 
+
 
         /// <summary>
         /// 回滚事务
@@ -381,7 +381,8 @@ namespace MySqlSugar
             ExecLogEvent(sql, pars, true);
             MySqlDataAdapter _sqlDataAdapter = new MySqlDataAdapter(sql, _MySqlConnection);
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
-            _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
+            if (pars != null)
+                _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             if (IsGetPageParas)
             {
                 SqlSugarToolExtensions.RequestParasToSqlParameters(_sqlDataAdapter.SelectCommand.Parameters);
@@ -428,7 +429,8 @@ namespace MySqlSugar
             }
             _sqlDataAdapter.SelectCommand.CommandTimeout = this.CommandTimeOut;
             _sqlDataAdapter.SelectCommand.CommandType = CommandType;
-            _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
+            if (pars != null)
+                _sqlDataAdapter.SelectCommand.Parameters.AddRange(pars);
             DataSet ds = new DataSet();
             _sqlDataAdapter.Fill(ds);
             if (IsClearParameters)
