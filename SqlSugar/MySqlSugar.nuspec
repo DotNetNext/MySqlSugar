@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>mySqlSugar</id>
-    <version>1.5</version>
+    <version>3.1.0.9</version>
     <title>MySqlSugarORM </title>
     <authors>sun kaixuan</authors>
     <owners>landa</owners>
@@ -12,6 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>SqlSugar ORM  .NET 4.0+ High-performance, lightweight http://www.cnblogs.com/sunkaixuan/p/5654695.html</description>
     <copyright>Copyright 2015</copyright>
-    <tags>asp.net orm</tags>
+    <tags>asp.net orm mysql</tags>
   </metadata>
+     <files>
+     <file src="F:\MyOpenSource\MySql\SqlSugar\bin\Debug\MySqlSugar.XML"  target=""></file>
+    </files>
 </package>
