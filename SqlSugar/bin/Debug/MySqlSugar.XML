@@ -1112,7 +1112,11 @@
             动态获取IDataRecord里面的函数
             </summary>
             <param name="generator"></param>
+            <param name="type"></param>
+            <param name="isNullable"></param>
             <param name="pro"></param>
+            <param name="dbTypeName"></param>
+            <param name="fieldName"></param>
         </member>
         <member name="T:MySqlSugar.IDataReaderEntityBuilder`1.Load">
             <summary>
