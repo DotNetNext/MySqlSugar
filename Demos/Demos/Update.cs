@@ -63,6 +63,15 @@ namespace NewTest.Demos
                 //批量更新  数据量大时建议使用
                 var updateResult2 = db.SqlBulkReplace(GetUpdateList2());
 
+                //更新字符串
+                db.Update<Student>("sch_id=sch_id+1", it => it.id == 1);
+
+
+                //清空禁止更新列
+                db.DisableUpdateColumns = null;
+                //新语法添加禁止更新列
+                db.AddDisableUpdateColumn("id", "name");//添加禁止更新列
+
             }
         }
 
