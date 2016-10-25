@@ -775,6 +775,18 @@
             忽略非数据库列 （默认为:false）
             </summary>
         </member>
+        <member name="M:MySqlSugar.SqlSugarClient.AddDisableUpdateColumn(System.String[])">
+            <summary>
+            添加禁止更新列
+            </summary>
+            <param name="columns"></param>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarClient.AddDisableInsertColumns(System.String[])">
+            <summary>
+            添加禁止插入列
+            </summary>
+            <param name="columns"></param>
+        </member>
         <member name="F:MySqlSugar.SqlSugarClient.SerializerDateFormat">
              <summary>
             设置Queryable或者Sqlable转换成JSON字符串时的日期格式
@@ -924,6 +936,16 @@
             </summary>
             <param name="entities"></param>
             <returns>全部插入成功返回true</returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarClient.Update``1(System.String,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Object)">
+            <summary>
+            根据表达式条件将实体对象更新到数据库
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="setValues">set后面的部分字符串 例如( id=@id,num=num+1 )</param>
+            <param name="expression">表达式条件</param>
+            <param name="whereObj">匿名参数(例如:new{id=1,name="张三"})</param>
+            <returns></returns>
         </member>
         <member name="M:MySqlSugar.SqlSugarClient.Update``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
@@ -1255,6 +1277,30 @@
              </summary>
              <param name="name"></param>
              <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ArrayWhere(System.String[],System.Func{System.String,System.Boolean})">
+            <summary>
+            数组条件筛选
+            </summary>
+            <param name="thisValue"></param>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ArrayAdd(System.String[],System.String[])">
+            <summary>
+            数组添加元素
+            </summary>
+            <param name="thisValue"></param>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MySqlSugar.SqlSugarToolExtensions.ArrayRemove(System.String[],System.String)">
+            <summary>
+            数组移除
+            </summary>
+            <param name="thisValue"></param>
+            <param name="item"></param>
+            <returns></returns>
         </member>
         <member name="T:MySqlSugar.ClassTemplate">
             <summary>
