@@ -280,6 +280,7 @@ namespace MySqlSugar
             {
                 case "Int32": typeName = "int"; break;
                 case "String": typeName = "string"; break;
+                case "UInt64": typeName = "bool"; break;
             }
             return typeName;
         }
