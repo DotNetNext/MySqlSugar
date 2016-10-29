@@ -843,7 +843,7 @@ namespace MySqlSugar
                     }
                     else if (underType == SqlSugarTool.DateType)
                     {
-                        objValue = "'" + objValue.ToString() + "'";
+                        objValue = "'" + objValue.ObjToDate().ToString("yyyy-MM-dd HH:mm:ss") + "'";
                     }
                     else if (underType == SqlSugarTool.BoolType)
                     {
