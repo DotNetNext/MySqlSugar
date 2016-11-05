@@ -4,4 +4,3 @@ F:\MyOpenSource\MySql\SqlSugar\bin\Debug\MySql.Data.dll
 F:\MyOpenSource\MySql\SqlSugar\obj\Debug\MySqlSugar.dll
 F:\MyOpenSource\MySql\SqlSugar\obj\Debug\MySqlSugar.pdb
 F:\MyOpenSource\MySql\SqlSugar\bin\Debug\MySqlSugar.XML
-F:\MyOpenSource\MySql\SqlSugar\obj\Debug\MySqlSugar.csprojResolveAssemblyReference.cache
