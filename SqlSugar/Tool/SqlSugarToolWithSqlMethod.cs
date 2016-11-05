@@ -360,7 +360,7 @@ namespace MySqlSugar
         /// <returns></returns>
         internal static string GetTranslationSqlName(string name)
         {
-            Check.ArgumentNullException(name, "列名不能为空。");
+            Check.ArgumentNullException(name, "表名或者列名不能为空，检查所在表是否有主键。");
             if (name.Contains("'")) return name;
             if (name.Contains("`")) return name;
             if (name.Contains("@")) return name;
