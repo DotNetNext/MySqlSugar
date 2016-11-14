@@ -2296,17 +2296,17 @@
             join类型
             </summary>
         </member>
-        <member name="F:MySqlSugar.JoinType.INNER">
+        <member name="F:MySqlSugar.JoinType.Inner">
             <summary>
             等值连接
             </summary>
         </member>
-        <member name="F:MySqlSugar.JoinType.LEFT">
+        <member name="F:MySqlSugar.JoinType.Left">
             <summary>
             左外连
             </summary>
         </member>
-        <member name="F:MySqlSugar.JoinType.RIGHT">
+        <member name="F:MySqlSugar.JoinType.Right">
             <summary>
             右外连
             </summary>
@@ -2316,12 +2316,12 @@
             Apply类型
             </summary>
         </member>
-        <member name="F:MySqlSugar.ApplyType.CORSS">
+        <member name="F:MySqlSugar.ApplyType.Cross">
             <summary>
             笛卡尔积
             </summary>
         </member>
-        <member name="F:MySqlSugar.ApplyType.OUTRE">
+        <member name="F:MySqlSugar.ApplyType.Outer">
             <summary>
             外连
             </summary>
@@ -2331,12 +2331,12 @@
             排序类型
             </summary>
         </member>
-        <member name="F:MySqlSugar.OrderByType.asc">
+        <member name="F:MySqlSugar.OrderByType.Asc">
             <summary>
             升序
             </summary>
         </member>
-        <member name="F:MySqlSugar.OrderByType.desc">
+        <member name="F:MySqlSugar.OrderByType.Desc">
             <summary>
             降序
             </summary>
@@ -2356,12 +2356,12 @@
             解析类型
             </summary>
         </member>
-        <member name="F:MySqlSugar.ResolveExpressType.oneT">
+        <member name="F:MySqlSugar.ResolveExpressType.OneT">
             <summary>
             单个T
             </summary>
         </member>
-        <member name="F:MySqlSugar.ResolveExpressType.nT">
+        <member name="F:MySqlSugar.ResolveExpressType.NT">
             <summary>
             多个T
             </summary>
