@@ -775,7 +775,7 @@
             忽略非数据库列 （默认为:false）
             </summary>
         </member>
-        <member name="M:MySqlSugar.SqlSugarClient.AddDisableUpdateColumn(System.String[])">
+        <member name="M:MySqlSugar.SqlSugarClient.AddDisableUpdateColumns(System.String[])">
             <summary>
             添加禁止更新列
             </summary>
@@ -807,13 +807,13 @@
             当前滤器名称
             </summary>
         </member>
-        <member name="M:MySqlSugar.SqlSugarClient.SetFilterFilterParas(System.Collections.Generic.Dictionary{System.String,System.Func{MySqlSugar.KeyValueObj}})">
+        <member name="M:MySqlSugar.SqlSugarClient.SetFilterItems(System.Collections.Generic.Dictionary{System.String,System.Func{MySqlSugar.KeyValueObj}})">
             <summary>
             设置过滤器（用户权限过滤）
             </summary>
             <param name="filterRows">参数Dictionary string 为过滤器的名称 , Dictionary Func&lt;KeyValueObj&gt; 为过滤函数 (KeyValueObj 中的 Key为Sql条件,Value为Sql参数)</param>
         </member>
-        <member name="M:MySqlSugar.SqlSugarClient.SetFilterFilterParas(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
+        <member name="M:MySqlSugar.SqlSugarClient.SetFilterItems(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
             <summary>
             设置过滤器（用户权限过滤）
             </summary>
@@ -837,17 +837,22 @@
             </summary>
             <param name="mappingColumns"></param>
         </member>
-        <member name="M:MySqlSugar.SqlSugarClient.AddMappingColum(MySqlSugar.KeyValue)">
+        <member name="M:MySqlSugar.SqlSugarClient.AddMappingColumn(MySqlSugar.KeyValue)">
             <summary>
             添加实体字段与数据库字段的映射，Key为实体字段 Value为表字段名称 （注意：不区分表，设置后所有表通用）
             </summary>
-            <param name="mappingColumns"></param>
+            <param name="mappingColumn"></param>
         </member>
         <member name="M:MySqlSugar.SqlSugarClient.SetSerialNumber(System.Collections.Generic.List{MySqlSugar.PubModel.SerialNumber})">
             <summary>
             设置流水号 
             </summary>
             <param name="serNum">设置流水号所需要的参数集合</param>
+        </member>
+        <member name="F:MySqlSugar.SqlSugarClient.TempData">
+            <summary>
+            在同一个会话中可以存储一些临时数据
+            </summary>
         </member>
         <member name="M:MySqlSugar.SqlSugarClient.Sqlable">
             <summary>
