@@ -16,7 +16,7 @@ namespace NewTest
         {
 
             //设置执行的DEMO
-            string switchOn = "select";
+            string switchOn = "insertorupdate";
             IDemos demo = null;
             switch (switchOn)
             {
@@ -27,6 +27,8 @@ namespace NewTest
                 case "delete": demo = new Delete(); break;
                 //插入
                 case "insert": demo = new Insert(); break;
+                //插入或者更新
+                case "insertorupdate": demo = new InsertOrUpdate(); break;
                 //更新
                 case "update": demo = new Update(); break;
                 //基层函数的用法
