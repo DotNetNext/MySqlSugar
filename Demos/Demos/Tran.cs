@@ -18,7 +18,6 @@ namespace NewTest.Demos
             Console.WriteLine("启动Tran.Init");
             using (SqlSugarClient db = SugarDao.GetInstance())//开启数据库连接
             {
-                db.IsNoLock = true;//启用无锁查询
                 db.CommandTimeOut = 30000;//设置超时时间
                 try
                 {
