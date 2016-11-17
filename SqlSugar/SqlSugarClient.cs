@@ -169,7 +169,7 @@ namespace MySqlSugar
         /// <summary>
         /// 查询是否允许脏读（默认为:true）
         /// </summary>
-        public bool IsNoLock { get; set; }
+        internal bool IsNoLock { get; set; }
 
         /// <summary>
         /// 忽略非数据库列 （默认为:false）
