@@ -16,7 +16,7 @@ namespace NewTest
         {
 
             //设置执行的DEMO
-            string switchOn = "select";
+            string switchOn = "masterslave";
             IDemos demo = null;
             switch (switchOn)
             {
@@ -69,7 +69,8 @@ namespace NewTest
                 //配置与实例的用法
                 case "initconfig": demo = new InitConfig(); break;
 
-
+                //读写分离
+                case "masterslave": demo = new MasterSlave(); break;
 
                 /****************************支持**************************************/
                 //公开函数数

@@ -63,6 +63,7 @@
     <Compile Include="Demos\Log.cs" />
     <Compile Include="Demos\MappingColumns.cs" />
     <Compile Include="Demos\MappingTable.cs" />
+    <Compile Include="Demos\MasterSlave.cs" />
     <Compile Include="Demos\PubMethod.cs" />
     <Compile Include="Demos\Select.cs" />
     <Compile Include="Demos\SerializerDateFormat.cs" />
