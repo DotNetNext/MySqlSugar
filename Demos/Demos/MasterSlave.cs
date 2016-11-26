@@ -18,6 +18,7 @@ namespace NewTest.Demos
             Console.WriteLine("启动Ado.Init");
             using (var db = new SqlSugarClient("server=localhost;Database=SqlSugarTest;Uid=root;Pwd=root", "Server=localhost;database=sqlsugartest;Uid=root;Pwd=root"))
             {
+                db.BeginTran();
                var list= db.Queryable<Student>().ToList();
 
                db.Insert(new Student() { name="写入" });

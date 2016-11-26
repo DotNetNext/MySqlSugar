@@ -66,6 +66,11 @@ namespace MySqlSugar
         /// 从连接
         /// </summary>
         private List<MySqlConnection> _slaveConnections = null;
+        /// <summary>
+        /// 初始化 SqlHelper 类的新实例
+        /// </summary>
+        /// <param name="masterConnectionString"></param>
+        /// <param name="slaveConnectionStrings"></param>
         public SqlHelper(string masterConnectionString, params string[] slaveConnectionStrings)
         {
             _masterConnection = new MySqlConnection(masterConnectionString);
@@ -121,6 +126,7 @@ namespace MySqlSugar
         public void BeginTran()
         {
             SetCurrentConnection(true);
+            CheckConnect();
             _tran = _MySqlConnection.BeginTransaction();
         }
 
@@ -131,6 +137,7 @@ namespace MySqlSugar
         public void BeginTran(IsolationLevel iso)
         {
             SetCurrentConnection(true);
+            CheckConnect();
             _tran = _MySqlConnection.BeginTransaction(iso);
         }
 
@@ -141,6 +148,7 @@ namespace MySqlSugar
         public void RollbackTran()
         {
             SetCurrentConnection(true);
+            CheckConnect();
             if (_tran != null)
             {
                 _tran.Rollback();
@@ -153,6 +161,8 @@ namespace MySqlSugar
         /// </summary>
         public void CommitTran()
         {
+            SetCurrentConnection(true);
+            CheckConnect();
             if (_tran != null)
             {
                 _tran.Commit();
