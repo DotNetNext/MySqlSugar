@@ -35,10 +35,10 @@ namespace MySqlSugar
         /// </summary>
         /// <param name="masterConnectionString">主:写入事务等操作</param>
         /// <param name="slaveConnectionString">从:无事务读取</param>
-        public SqlSugarClient(string masterConnectionString, string slaveConnectionString)
+        public SqlSugarClient(string masterConnectionString,params string [] slaveConnectionString)
             : base(masterConnectionString, slaveConnectionString)
         {
-            ConnectionString = slaveConnectionString;
+            ConnectionString = masterConnectionString;
             IsNoLock = false;
         }
         #endregion
