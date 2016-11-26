@@ -47,6 +47,8 @@ namespace NewTest.Demos
                 var studentDynamic = db.Queryable<Student>().ToDynamic();
                 var studentJson = db.Queryable<Student>().ToJson();
 
+                var ls = db.Queryable<Student>().Select(it => it.name).ToList();
+
 
                 //查询单条
                 var single = db.Queryable<Student>().Single(c => c.id == 1);

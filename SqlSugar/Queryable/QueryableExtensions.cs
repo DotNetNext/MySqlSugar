@@ -709,6 +709,10 @@ namespace MySqlSugar
             {
                 reval.SelectValue = expStr;
                 ResolveSelect.GetResult<TResult>(reval,expression);
+                if (reval.SelectValue == "*" || reval.SelectValue == "")
+                {
+                   reval.SelectValue = new ResolveExpress().GetExpressionRightField(expression, reval.DB);
+                }
             }
             return reval;
         }
