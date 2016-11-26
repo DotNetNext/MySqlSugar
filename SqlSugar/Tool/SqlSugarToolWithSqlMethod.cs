@@ -100,13 +100,25 @@ namespace MySqlSugar
             return isNoLock ? " " : "";
         }
 
+        
         /// <summary>
         /// 根据表获取主键
         /// </summary>
         /// <param name="db"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        internal static string GetPrimaryKeyByTableName(SqlSugarClient db, string tableName)
+        internal static string GetPrimaryKeyByTableName(SqlSugarClient db, string tableName) {
+            var reval = GetPrimaryKeyByTableNames(db, tableName);
+            if (reval.IsValuable()) return reval.First();
+            return null;
+        }
+        /// <summary>
+        /// 根据表获取主键
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        internal static List<string> GetPrimaryKeyByTableNames(SqlSugarClient db, string tableName)
         {
             string key = "GetPrimaryKeyByTableName" + tableName;
             tableName = tableName.ToLower();
@@ -118,7 +130,7 @@ namespace MySqlSugar
                 primaryInfo = cm[key];
             else
             {
-                string sql = @"select TABLE_NAME as tableName,COLUMN_NAME as keyName from INFORMATION_SCHEMA.COLUMNS where table_name='" + tableName + "' AND COLUMN_KEY='PRI';";
+                string sql = @"select DISTINCT TABLE_NAME as tableName,COLUMN_NAME as keyName from INFORMATION_SCHEMA.COLUMNS where table_name='" + tableName + "' AND COLUMN_KEY='PRI';";
                 var isLog = db.IsEnableLogEvent;
                 db.IsEnableLogEvent = false;
                 var dt = db.GetDataTable(sql);
@@ -139,7 +151,7 @@ namespace MySqlSugar
             {
                 return null;
             }
-            return primaryInfo.First(it => it.Key == tableName).Value;
+            return primaryInfo.Where(it => it.Key == tableName).Select(it=>it.Value).ToList();
 
         }
 
