@@ -30,6 +30,17 @@ namespace MySqlSugar
             ConnectionString = connectionString;
             IsNoLock = false;
         }
+        /// <summary>
+        /// 初始化 SqlSugarClient 类的新实例（主从模式）
+        /// </summary>
+        /// <param name="masterConnectionString">主:写入事务等操作</param>
+        /// <param name="slaveConnectionString">从:无事务读取</param>
+        public SqlSugarClient(string masterConnectionString, string slaveConnectionString)
+            : base(masterConnectionString, slaveConnectionString)
+        {
+            ConnectionString = slaveConnectionString;
+            IsNoLock = false;
+        }
         #endregion
 
 
