@@ -513,7 +513,12 @@ namespace MySqlSugar
             ExecLogEvent(sql, pars, false);
             return ds;
         }
-
+        /// <summary>
+        /// 执行日志事件
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pars"></param>
+        /// <param name="isStarting"></param>
         protected virtual void ExecLogEvent(string sql, MySqlParameter[] pars, bool isStarting = true)
         {
             if (IsEnableLogEvent)
