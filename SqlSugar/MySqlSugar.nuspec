@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>mySqlSugar</id>
-    <version>3.5.2.9</version>
+    <version>3.5.3</version>
     <title>MySqlSugarORM </title>
     <authors>sun kaixuan</authors>
     <owners>landa</owners>

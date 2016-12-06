@@ -16,8 +16,14 @@ namespace MySqlSugar
     /// </summary>
     public class SqlHelper : IDisposable
     {
-        MySqlConnection _MySqlConnection;
-        MySqlTransaction _tran = null;
+        /// <summary>
+        /// 连接对象
+        /// </summary>
+        protected MySqlConnection _MySqlConnection;
+        /// <summary>
+        /// 事务对象
+        /// </summary>
+        protected MySqlTransaction _tran = null;
         /// <summary>
         /// 如何解释命令字符串 默认为Text 
         /// </summary>
@@ -61,11 +67,11 @@ namespace MySqlSugar
         /// <summary>
         /// 主连接
         /// </summary>
-        private MySqlConnection _masterConnection = null;
+        protected MySqlConnection _masterConnection = null;
         /// <summary>
         /// 从连接
         /// </summary>
-        private List<MySqlConnection> _slaveConnections = null;
+        protected List<MySqlConnection> _slaveConnections = null;
         /// <summary>
         /// 初始化 SqlHelper 类的新实例
         /// </summary>
@@ -94,7 +100,7 @@ namespace MySqlSugar
         /// 设置当前主从连接对象
         /// </summary>
         /// <param name="isMaster"></param>
-        public void SetCurrentConnection(bool isMaster)
+        public virtual void SetCurrentConnection(bool isMaster)
         {
             if (_slaveConnections != null && _slaveConnections.Count > 0)//开启主从模式
             {
@@ -115,7 +121,7 @@ namespace MySqlSugar
         /// </summary>
         /// <returns></returns>
 
-        public MySqlConnection GetConnection()
+        public virtual MySqlConnection GetConnection()
         {
             return _MySqlConnection;
         }
@@ -123,7 +129,7 @@ namespace MySqlSugar
         /// <summary>
         /// 开始事务
         /// </summary>
-        public void BeginTran()
+        public virtual void BeginTran()
         {
             SetCurrentConnection(true);
             CheckConnect();
@@ -134,7 +140,7 @@ namespace MySqlSugar
         /// 开始事务
         /// </summary>
         /// <param name="iso">指定事务行为</param>
-        public void BeginTran(IsolationLevel iso)
+        public virtual void BeginTran(IsolationLevel iso)
         {
             SetCurrentConnection(true);
             CheckConnect();
@@ -145,7 +151,7 @@ namespace MySqlSugar
         /// <summary>
         /// 回滚事务
         /// </summary>
-        public void RollbackTran()
+        public virtual void RollbackTran()
         {
             SetCurrentConnection(true);
             CheckConnect();
@@ -159,7 +165,7 @@ namespace MySqlSugar
         /// <summary>
         /// 提交事务
         /// </summary>
-        public void CommitTran()
+        public virtual void CommitTran()
         {
             SetCurrentConnection(true);
             CheckConnect();
@@ -176,7 +182,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public string GetString(string sql, object pars)
+        public virtual string GetString(string sql, object pars)
         {
             return GetString(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -187,7 +193,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public string GetString(string sql, params MySqlParameter[] pars)
+        public virtual string GetString(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToString(GetScalar(sql, pars));
         }
@@ -198,7 +204,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public int GetInt(string sql, object pars)
+        public virtual int GetInt(string sql, object pars)
         {
             return GetInt(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -220,7 +226,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public Double GetDouble(string sql, params MySqlParameter[] pars)
+        public virtual Double GetDouble(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDouble(GetScalar(sql, pars));
         }
@@ -231,7 +237,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public decimal GetDecimal(string sql, params MySqlParameter[] pars)
+        public virtual decimal GetDecimal(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDecimal(GetScalar(sql, pars));
         }
@@ -242,7 +248,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DateTime GetDateTime(string sql, params MySqlParameter[] pars)
+        public virtual DateTime GetDateTime(string sql, params MySqlParameter[] pars)
         {
             return Convert.ToDateTime(GetScalar(sql, pars));
         }
@@ -253,7 +259,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public object GetScalar(string sql, object pars)
+        public virtual object GetScalar(string sql, object pars)
         {
             return GetScalar(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -264,7 +270,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public object GetScalar(string sql, params MySqlParameter[] pars)
+        public virtual object GetScalar(string sql, params MySqlParameter[] pars)
         {
             SetCurrentConnection(true);
             ExecLogEvent(sql, pars, true);
@@ -296,7 +302,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public int ExecuteCommand(string sql, object pars)
+        public virtual int ExecuteCommand(string sql, object pars)
         {
             return ExecuteCommand(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -307,7 +313,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public int ExecuteCommand(string sql, params MySqlParameter[] pars)
+        public virtual int ExecuteCommand(string sql, params MySqlParameter[] pars)
         {
             SetCurrentConnection(true);
             ExecLogEvent(sql, pars, true);
@@ -338,7 +344,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public MySqlDataReader GetReader(string sql, object pars)
+        public virtual MySqlDataReader GetReader(string sql, object pars)
         {
             return GetReader(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -349,7 +355,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public MySqlDataReader GetReader(string sql, params MySqlParameter[] pars)
+        public virtual MySqlDataReader GetReader(string sql, params MySqlParameter[] pars)
         {
             SetCurrentConnection(false);
             ExecLogEvent(sql, pars, true);
@@ -381,7 +387,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public List<T> GetList<T>(string sql, object pars)
+        public virtual List<T> GetList<T>(string sql, object pars)
         {
             return GetList<T>(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -393,7 +399,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public List<T> GetList<T>(string sql, params MySqlParameter[] pars)
+        public virtual List<T> GetList<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null);
             return reval;
@@ -406,7 +412,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public T GetSingle<T>(string sql, object pars)
+        public virtual T GetSingle<T>(string sql, object pars)
         {
             return GetSingle<T>(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -418,7 +424,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public T GetSingle<T>(string sql, params MySqlParameter[] pars)
+        public virtual T GetSingle<T>(string sql, params MySqlParameter[] pars)
         {
             var reval = SqlSugarTool.DataReaderToList<T>(typeof(T), GetReader(sql, pars), null).Single();
             return reval;
@@ -430,7 +436,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars">匿名参数(例如:new{id=1,name="张三"})</param>
         /// <returns></returns>
-        public DataTable GetDataTable(string sql, object pars)
+        public virtual DataTable GetDataTable(string sql, object pars)
         {
             return GetDataTable(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -441,7 +447,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DataTable GetDataTable(string sql, params MySqlParameter[] pars)
+        public virtual DataTable GetDataTable(string sql, params MySqlParameter[] pars)
         {
             SetCurrentConnection(false);
             ExecLogEvent(sql, pars, true);
@@ -472,7 +478,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DataSet GetDataSetAll(string sql, object pars)
+        public virtual DataSet GetDataSetAll(string sql, object pars)
         {
             return GetDataSetAll(sql, SqlSugarTool.GetParameters(pars));
         }
@@ -482,7 +488,7 @@ namespace MySqlSugar
         /// <param name="sql"></param>
         /// <param name="pars"></param>
         /// <returns></returns>
-        public DataSet GetDataSetAll(string sql, params MySqlParameter[] pars)
+        public virtual DataSet GetDataSetAll(string sql, params MySqlParameter[] pars)
         {
             SetCurrentConnection(false);
             ExecLogEvent(sql, pars, true);
@@ -508,7 +514,7 @@ namespace MySqlSugar
             return ds;
         }
 
-        private void ExecLogEvent(string sql, MySqlParameter[] pars, bool isStarting = true)
+        protected virtual void ExecLogEvent(string sql, MySqlParameter[] pars, bool isStarting = true)
         {
             if (IsEnableLogEvent)
             {
@@ -529,7 +535,7 @@ namespace MySqlSugar
         /// <summary>
         /// 释放数据库连接对象
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (_MySqlConnection != null)
             {
