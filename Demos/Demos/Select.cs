@@ -9,11 +9,11 @@ using System.Data.SqlClient;
 using System.Data;
 
 namespace NewTest.Demos
-{
+{ 
     //查询的例子
     public class Select : IDemos
     {
-
+        public static string xxxx = "1";
         public void Init()
         {
             Console.WriteLine("启动Select.Init");
@@ -40,10 +40,10 @@ namespace NewTest.Demos
 
             using (var db = SugarDao.GetInstance())
             {
-
-
+             
+              
                 //查询所有
-                var student = db.Queryable<Student>().ToList();
+                var student = db.Queryable<Student>().Where(it => it.name == xxxx).FirstOrDefault();
                 var studentDynamic = db.Queryable<Student>().ToDynamic();
                 var studentJson = db.Queryable<Student>().ToJson();
 
